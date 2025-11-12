@@ -32,3 +32,6 @@ test_pr*.py
 demo_for_*.py
 examples/**/zou*
 examples/inputs/videos
+
+.venv/
+300VW_Dataset_2015_12_14

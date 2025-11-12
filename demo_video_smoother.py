@@ -1,3 +1,4 @@
+# ADAPTED from demo_video.py
 # coding: utf-8
 
 __author__ = "cleardusk"
@@ -14,6 +15,7 @@ from utils.render import render
 
 # from utils.render_ctypes import render
 from utils.functions import cv_draw_landmark, get_suffix
+from temporal_smoother import TemporalSmoother
 
 
 def main(args):
@@ -38,6 +40,9 @@ def main(args):
 
     # Given a video path
     reader = imageio.get_reader(args.video_fp)
+
+    # NEW: Initialize the smoother
+    smoother = TemporalSmoother(transform_method="ewma", alpha=0.4)
 
     writer = None
     landmarks_list = None
@@ -74,6 +79,12 @@ def main(args):
                 boxes = [boxes[0]]
                 param_lst, roi_box_lst = tddfa(frame_bgr, boxes)
 
+        # NEW: Smooth before reconstructing vertices
+        raw_param = param_lst[0]
+        smoothed_param = smoother.smooth(raw_param)
+        param_lst = [smoothed_param]
+
+        # refine
         ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
         pre_ver = ver  # for tracking
 
