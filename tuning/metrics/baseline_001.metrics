@@ -1,0 +1,7 @@
+Loaded predicted landmarks from tuning/landmarks/baseline_001.npy (Shape: (1574, 68, 2))
+Loaded 1574 ground-truth frames from 300VW_Dataset_2015_12_14/001/annot/
+
+--- Final Metrics (Lower is Better) ---
+  NME (Accuracy):     2.9296%
+  Stability (Jitter): 0.6643%
+-----------------------------------------

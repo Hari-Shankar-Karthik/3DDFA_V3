@@ -1,79 +1,234 @@
 import numpy as np
 
 
-class SimpleKalman1D:
+# HELPER CLASS: 1D Kalman Filter
+class KalmanSmoother1D:
     """
-    A simple 1D Kalman Filter implementation.
-
-    It assumes a constant position model (F=1) and is used to
-    smooth a single scalar value.
+    A 1D Kalman Filter for smoothing a single value.
+    It models the state as [position, velocity].
     """
 
-    def __init__(self, R=0.1, Q=0.1):
-        """
-        :param R: Measurement Noise Covariance
-        :param Q: Process Noise Covariance
-        """
-        self.x = 0.0  # Initial state (position)
-        self.P = 1.0  # Initial state covariance
-        self.F = 1.0  # State transition (constant position)
-        self.H = 1.0  # Measurement function
-        self.R = R  # Measurement noise
-        self.Q = Q  # Process noise
+    def __init__(self, R=1e-2, Q=1e-3, P_init=1.0, dt=1.0):
+        self.R = R  # Measurement noise covariance
+        self.Q = np.diag([Q, Q])  # Process noise covariance
 
-    def predict(self):
-        # Predict the next state
-        self.x = self.x * self.F
-        self.P = (self.F * self.P * self.F) + self.Q
-        return self.x
+        self.F = np.array([[1, dt], [0, 1]])  # State transition matrix
+        self.H = np.array([[1, 0]])  # Measurement matrix
 
-    def update(self, z):
-        # Update the state based on a new measurement z
-        y = z - self.x * self.H  # Measurement residual
-        S = (self.H * self.P * self.H) + self.R  # Residual covariance
-        K = self.P * self.H * (1.0 / S)  # Kalman gain
+        self.P = np.diag([P_init, P_init])  # Initial state covariance
+        self.x = np.zeros(2)  # Initial state (pos, vel)
+        self.is_initialized = False
 
-        self.x = self.x + K * y
-        self.P = (1 - K * self.H) * self.P
-        return self.x
+    def smooth(self, z):
+        """Smooths a new measurement z."""
+        if not self.is_initialized:
+            self.x[0] = z
+            self.is_initialized = True
+            return self.x[0]
+
+        # --- Predict step ---
+        # x_pred = F * x
+        self.x = self.F @ self.x
+        # P_pred = F * P * F.T + Q
+        self.P = self.F @ self.P @ self.F.T + self.Q
+
+        # --- Update step ---
+        # y = z - H * x_pred
+        y = z - self.H @ self.x
+
+        # S = H * P_pred * H.T + R
+        S = self.H @ self.P @ self.H.T + self.R
+
+        # K = P_pred * H.T * inv(S)
+        K = self.P @ self.H.T @ np.linalg.inv(S)
+
+        # x_new = x_pred + K * y
+        self.x = self.x + K @ y
+
+        # P_new = (I - K * H) * P_pred
+        self.P = (np.eye(2) - K @ self.H) @ self.P
+
+        return self.x[0]
+
+
+# HELPER CLASS: One-Euro Filter
+class OneEuroFilter:
+    """
+    Implementation of the 1-Euro Filter.
+    Code based on: http://www.lifl.fr/~casiez/1euro/
+    """
+
+    def __init__(self, freq, min_cutoff=1.0, beta=0.0, d_cutoff=1.0):
+        self.freq = freq
+        self.min_cutoff = min_cutoff
+        self.beta = beta
+        self.d_cutoff = d_cutoff
+        self.x_filter = self._ema_filter()
+        self.dx_filter = self._ema_filter()
+        self.last_t = None
+
+    def _ema_filter(self):
+        """Creates a new exponential moving average filter."""
+        return {"val": 0.0, "s": 0.0, "initialized": False}
+
+    def _alpha(self, cutoff):
+        """Calculates the alpha value for a given cutoff frequency."""
+        te = 1.0 / self.freq
+        tau = 1.0 / (2 * np.pi * cutoff)
+        return 1.0 / (1.0 + tau / te)
+
+    def _ema(self, f, x, alpha):
+        """Applies the EMA filter."""
+        if not f["initialized"]:
+            f["s"] = x
+            f["initialized"] = True
+        else:
+            f["s"] = alpha * x + (1.0 - alpha) * f["s"]
+        f["val"] = f["s"]
+        return f
+
+    def filter(self, x, t=None):
+        """Filters a new value x at time t."""
+        if t is None:
+            if self.last_t is None:
+                self.last_t = 0.0
+            t = self.last_t + 1.0 / self.freq
+        self.last_t = t
+
+        # Calculate derivative
+        if self.x_filter["initialized"]:
+            dx = (x - self.x_filter["s"]) * self.freq
+        else:
+            dx = 0.0
+
+        # Filter the derivative
+        self.dx_filter = self._ema(self.dx_filter, abs(dx), self._alpha(self.d_cutoff))
+
+        # Calculate adaptive cutoff
+        cutoff = self.min_cutoff + self.beta * self.dx_filter["val"]
+
+        # Filter the signal
+        self.x_filter = self._ema(self.x_filter, x, self._alpha(cutoff))
+
+        return self.x_filter["val"]
+
+
+# MAIN SMOOTHER CLASSES
 
 
 class TransformSmoother:
     """
-    Smoothes the 12-dimensional transformation (pose) parameters.
+    Smooths the 12-D transformation parameters.
+    - Translation (3 params): Kalman Filter
+    - Rotation (as 4D quaternion): One-Euro Filter
+    - Scale (1 param): One-Euro Filter
     """
 
-    def __init__(self, method="ewma", **kwargs):
-        self.method = method
-        self.last_params = None
+    def __init__(self, freq=30.0, one_euro_beta=0.1, kf_R=1e-2, kf_Q=1e-3):
+        # 3 Kalman filters for 3 translation parameters
+        self.kf_x = KalmanSmoother1D(R=kf_R, Q=kf_Q)
+        self.kf_y = KalmanSmoother1D(R=kf_R, Q=kf_Q)
+        self.kf_z = KalmanSmoother1D(R=kf_R, Q=kf_Q)
 
-        if self.method == "ewma":
-            # Default alpha for EWMA. 0.1=very smooth, 0.9=very responsive
-            self.alpha = kwargs.get("alpha", 0.4)
+        # 5 One-Euro filters for 1 scale + 4 quaternion params
+        self.one_euro_s = OneEuroFilter(freq=freq, beta=one_euro_beta)
+        self.one_euro_q = [
+            OneEuroFilter(freq=freq, beta=one_euro_beta) for _ in range(4)
+        ]
 
-        elif self.method == "kalman":
-            # Measurement noise: how much to trust the new measurement
-            R = kwargs.get("R", 0.01)
-            # Process noise: how much the state can change
-            Q = kwargs.get("Q", 0.1)
-            # We need 12 independent 1D Kalman filters
-            self.kalman_filters = [SimpleKalman1D(R=R, Q=Q) for _ in range(12)]
-        else:
-            raise ValueError(f"Unknown smoothing method: {method}")
+    def _rotation_matrix_to_quaternion(self, R):
+        """Converts a 3x3 rotation matrix to a (w, x, y, z) quaternion."""
+        qw = 0.5 * np.sqrt(1 + R[0, 0] + R[1, 1] + R[2, 2])
+        qx = (R[2, 1] - R[1, 2]) / (4 * qw)
+        qy = (R[0, 2] - R[2, 0]) / (4 * qw)
+        qz = (R[1, 0] - R[0, 1]) / (4 * qw)
+        return np.array([qw, qx, qy, qz])
+
+    def _quaternion_to_rotation_matrix(self, q):
+        """Converts a (w, x, y, z) quaternion to a 3x3 rotation matrix."""
+        w, x, y, z = q
+        R = np.array(
+            [
+                [
+                    1 - 2 * y * y - 2 * z * z,
+                    2 * x * y - 2 * z * w,
+                    2 * x * z + 2 * y * w,
+                ],
+                [
+                    2 * x * y + 2 * z * w,
+                    1 - 2 * x * x - 2 * z * z,
+                    2 * y * z - 2 * x * w,
+                ],
+                [
+                    2 * x * z - 2 * y * w,
+                    2 * y * z + 2 * x * w,
+                    1 - 2 * x * x - 2 * y * y,
+                ],
+            ]
+        )
+        return R
 
     def smooth(self, params):
-        """Applies smoothing to the 12-D pose parameter vector."""
-        if params.shape[0] != 12:
-            raise ValueError(
-                f"TransformSmoother expects 12 parameters, got {params.shape[0]}"
-            )
+        # 1. DECOMPOSITION
+        T = params.reshape(3, 4)
+        t_vec = T[:, 3]
+        M = T[:, :3]
 
-        if self.method == "ewma":
-            return self._ewma_smooth(params)
-        elif self.method == "kalman":
-            return self._kalman_smooth(params)
+        # Extract scale (norm of the first column)
+        scale = np.linalg.norm(M[:, 0])
+        # Extract rotation matrix
+        R = M / (scale + 1e-8)  # Add epsilon to avoid division by zero
 
-    def _ewma_smooth(self, params):
+        # Convert rotation to quaternion
+        q = self._rotation_matrix_to_quaternion(R)
+
+        # 2. FILTERING
+        # Filter translation with Kalman Filters
+        t_x_smooth = self.kf_x.smooth(t_vec[0])
+        t_y_smooth = self.kf_y.smooth(t_vec[1])
+        t_z_smooth = self.kf_z.smooth(t_vec[2])
+        t_smooth = np.array([t_x_smooth, t_y_smooth, t_z_smooth])
+
+        # Filter scale with One-Euro Filter
+        s_smooth = self.one_euro_s.filter(scale)
+
+        # Filter quaternion with One-Euro Filters
+        q_smooth = np.array(
+            [
+                self.one_euro_q[0].filter(q[0]),
+                self.one_euro_q[1].filter(q[1]),
+                self.one_euro_q[2].filter(q[2]),
+                self.one_euro_q[3].filter(q[3]),
+            ]
+        )
+
+        # Re-normalize quaternion
+        q_smooth /= np.linalg.norm(q_smooth) + 1e-8
+
+        # 3. RECONSTRUCTION
+        # Convert smoothed quaternion back to rotation matrix
+        R_smooth = self._quaternion_to_rotation_matrix(q_smooth)
+
+        # Rebuild scaled rotation matrix
+        M_smooth = s_smooth * R_smooth
+
+        # Rebuild 3x4 transform matrix
+        T_smooth = np.hstack([M_smooth, t_smooth.reshape(3, 1)])
+
+        return T_smooth.flatten()
+
+
+class ShapeSmoother:
+    """
+    Smooths the 40-D shape parameters using Exponential Moving Average (EMA).
+    Assumes shape is constant, so uses a very strong smoothing factor.
+    """
+
+    def __init__(self, alpha=0.05):
+        self.alpha = alpha
+        self.last_params = None
+
+    def smooth(self, params):
         if self.last_params is None:
             self.last_params = params
             return params
@@ -82,84 +237,51 @@ class TransformSmoother:
         self.last_params = smoothed
         return smoothed
 
-    def _kalman_smooth(self, params):
-        smoothed_params = np.zeros(12)
-        for i in range(12):
-            kf = self.kalman_filters[i]
-            kf.predict()
-            kf.update(params[i])
-            smoothed_params[i] = kf.x
 
-        # We need to set self.last_params for the Kalman filter
-        # to handle the first frame issue in TemporalSmoother
-        if self.last_params is None:
-            self.last_params = smoothed_params
+class ExpressionSmoother:
+    """
+    Smooths the 10-D expression parameters using One-Euro Filters.
+    """
 
+    def __init__(self, freq=30.0, min_cutoff=1.0, beta=0.05):
+        self.filters = [OneEuroFilter(freq, min_cutoff, beta) for _ in range(10)]
+
+    def smooth(self, params):
+        smoothed_params = np.array(
+            [self.filters[i].filter(params[i]) for i in range(10)]
+        )
         return smoothed_params
 
 
-class ShapeSmoother:
-    """Skeletal class for smoothing the 40-D shape parameters."""
-
-    def __init__(self, **kwargs):
-        # Add any shape-specific initialization here
-        pass
-
-    def smooth(self, params):
-        """Pass-through for now."""
-        if params.shape[0] != 40:
-            raise ValueError(
-                f"ShapeSmoother expects 40 parameters, got {params.shape[0]}"
-            )
-        return params
-
-
-class ExpressionSmoother:
-    """Skeletal class for smoothing the 10-D expression parameters."""
-
-    def __init__(self, **kwargs):
-        # Add any expression-specific initialization here
-        pass
-
-    def smooth(self, params):
-        """Pass-through for now."""
-        if params.shape[0] != 10:
-            raise ValueError(
-                f"ExpressionSmoother expects 10 parameters, got {params.shape[0]}"
-            )
-        return params
-
-
+# Gotta use 'em all!
 class TemporalSmoother:
     """
-    Main class to coordinate smoothing of all 3DMM parameters.
+    Main class to apply temporal smoothing to 3DDFA-V2 parameters.
+    Splits the 62-D vector and applies specialized smoothing to each part.
     """
 
-    def __init__(self, transform_method="ewma", **kwargs):
-        """
-        Initializes all sub-smoothers.
-        :param transform_method: 'ewma' or 'kalman'
-        :param **kwargs: Arguments passed to the smoothers
-                         (e.g., 'alpha' for ewma, 'R' and 'Q' for kalman)
-        """
-        self.transform_smoother = TransformSmoother(method=transform_method, **kwargs)
-        self.shape_smoother = ShapeSmoother(**kwargs)
-        self.expression_smoother = ExpressionSmoother(**kwargs)
+    def __init__(
+        self,
+        shape_alpha=0.05,
+        expr_freq=30.0,
+        expr_beta=0.05,
+        trans_freq=1.0,
+        trans_beta=0.0,
+        kf_R=1e-2,
+        kf_Q=1e-3,
+    ):
+
+        self.transform_smoother = TransformSmoother(
+            freq=trans_freq, one_euro_beta=trans_beta, kf_R=kf_R, kf_Q=kf_Q
+        )
+        self.shape_smoother = ShapeSmoother(alpha=shape_alpha)
+        self.expression_smoother = ExpressionSmoother(freq=expr_freq, beta=expr_beta)
 
     def smooth(self, params):
-        """
-        Takes the 62-D param vector, splits it, smooths each part,
-        and recombines.
-        """
-        if params.shape[0] != 62:
-            raise ValueError(
-                f"TemporalSmoother expects 62 parameters, got {params.shape[0]}"
-            )
-
-        # 1. Split the 62-D vector
-        pose_params = params[:12]
-        shape_params = params[12:52]
-        exp_params = params[52:]
+        # 1. Split the 62-D vector (as per paper)
+        pose_params = params[:12]  # 12 transform params
+        shape_params = params[12:52]  # 40 shape params
+        exp_params = params[52:]  # 10 expression params
 
         # 2. Smooth each part individually
         smoothed_pose = self.transform_smoother.smooth(pose_params)

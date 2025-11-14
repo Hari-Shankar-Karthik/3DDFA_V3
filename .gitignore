@@ -35,3 +35,4 @@ examples/inputs/videos
 
 .venv/
 300VW_Dataset_2015_12_14
+*.avi
