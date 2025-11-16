@@ -88,8 +88,8 @@ def convert_mp4_to_avi(input_file_path, output_file_path):
 
 # --- Example Usage ---
 # NOTE: Replace 'example_video.mp4' with the actual name and path of your file.
-INPUT_FILE = "300VW_Dataset_2015_12_14/569/vid.mp4"
-OUTPUT_FILE = "300VW_Dataset_2015_12_14/569/vid.avi"
+INPUT_FILE = "300VW_Dataset_2015_12_14/1800/vid.mp4"
+OUTPUT_FILE = "300VW_Dataset_2015_12_14/1800/vid.avi"
 
 if __name__ == "__main__":
     convert_mp4_to_avi(INPUT_FILE, OUTPUT_FILE)

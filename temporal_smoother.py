@@ -58,9 +58,9 @@ class OneEuroFilter:
     Code based on: http://www.lifl.fr/~casiez/1euro/
     """
 
-    def __init__(self, freq, min_cutoff=1.0, beta=0.0, d_cutoff=1.0):
+    def __init__(self, freq, fcmin=1.0, beta=0.0, d_cutoff=1.0):
         self.freq = freq
-        self.min_cutoff = min_cutoff
+        self.fcmin = fcmin
         self.beta = beta
         self.d_cutoff = d_cutoff
         self.x_filter = self._ema_filter()
@@ -105,7 +105,7 @@ class OneEuroFilter:
         self.dx_filter = self._ema(self.dx_filter, abs(dx), self._alpha(self.d_cutoff))
 
         # Calculate adaptive cutoff
-        cutoff = self.min_cutoff + self.beta * self.dx_filter["val"]
+        cutoff = self.fcmin + self.beta * self.dx_filter["val"]
 
         # Filter the signal
         self.x_filter = self._ema(self.x_filter, x, self._alpha(cutoff))
@@ -119,22 +119,45 @@ class OneEuroFilter:
 class TransformSmoother:
     """
     Smooths the 12-D transformation parameters.
-    - Translation (3 params): Kalman Filter
+    # - Translation (3 params): Kalman Filter
+    - Translation (3 params): One-Euro Filter
     - Rotation (as 4D quaternion): One-Euro Filter
     - Scale (1 param): One-Euro Filter
     """
 
-    def __init__(self, freq=30.0, one_euro_beta=0.1, kf_R=1e-2, kf_Q=1e-3):
-        # 3 Kalman filters for 3 translation parameters
-        self.kf_x = KalmanSmoother1D(R=kf_R, Q=kf_Q)
-        self.kf_y = KalmanSmoother1D(R=kf_R, Q=kf_Q)
-        self.kf_z = KalmanSmoother1D(R=kf_R, Q=kf_Q)
+    def __init__(
+        self,
+        translation_fcmin,
+        translation_beta,
+        scale_fcmin,
+        scale_beta,
+        rotation_fcmin,
+        rotation_beta,
+        freq=30.0,
+    ):
+        # 3 One-Euro filters for 3 translation params
+        self.one_euro_x = OneEuroFilter(
+            freq=freq, fcmin=translation_fcmin, beta=translation_beta
+        )
+        self.one_euro_y = OneEuroFilter(
+            freq=freq, fcmin=translation_fcmin, beta=translation_beta
+        )
+        self.one_euro_z = OneEuroFilter(
+            freq=freq, fcmin=translation_fcmin, beta=translation_beta
+        )
 
-        # 5 One-Euro filters for 1 scale + 4 quaternion params
-        self.one_euro_s = OneEuroFilter(freq=freq, beta=one_euro_beta)
+        # One-Euro filter for 1 scale param
+        self.one_euro_s = OneEuroFilter(freq=freq, fcmin=scale_fcmin, beta=scale_beta)
+
+        # 4 One-Euro filters for 4 quaternion params
         self.one_euro_q = [
-            OneEuroFilter(freq=freq, beta=one_euro_beta) for _ in range(4)
+            OneEuroFilter(freq=freq, fcmin=rotation_fcmin, beta=rotation_beta)
+            for _ in range(4)
         ]
+
+        # A quaternion and its negative capture the same rotation
+        # So our filter should be mindful of that
+        self.last_q_smooth = None
 
     def _rotation_matrix_to_quaternion(self, R):
         """Converts a 3x3 rotation matrix to a (w, x, y, z) quaternion."""
@@ -183,16 +206,23 @@ class TransformSmoother:
         q = self._rotation_matrix_to_quaternion(R)
 
         # 2. FILTERING
-        # Filter translation with Kalman Filters
-        t_x_smooth = self.kf_x.smooth(t_vec[0])
-        t_y_smooth = self.kf_y.smooth(t_vec[1])
-        t_z_smooth = self.kf_z.smooth(t_vec[2])
+        # Filter translation with One-Euro filters
+        t_x_smooth = self.one_euro_x.filter(t_vec[0])
+        t_y_smooth = self.one_euro_y.filter(t_vec[1])
+        t_z_smooth = self.one_euro_z.filter(t_vec[2])
         t_smooth = np.array([t_x_smooth, t_y_smooth, t_z_smooth])
 
         # Filter scale with One-Euro Filter
         s_smooth = self.one_euro_s.filter(scale)
 
         # Filter quaternion with One-Euro Filters
+
+        # The quaternion vector may be opposite to the one in the previous frame
+        # For nice linear smoothing, we will have to flip it
+        if self.last_q_smooth is not None:
+            if np.dot(q, self.last_q_smooth) < 0.0:
+                q = -q
+
         q_smooth = np.array(
             [
                 self.one_euro_q[0].filter(q[0]),
@@ -204,6 +234,8 @@ class TransformSmoother:
 
         # Re-normalize quaternion
         q_smooth /= np.linalg.norm(q_smooth) + 1e-8
+
+        self.last_q_smooth = q_smooth
 
         # 3. RECONSTRUCTION
         # Convert smoothed quaternion back to rotation matrix
@@ -243,8 +275,8 @@ class ExpressionSmoother:
     Smooths the 10-D expression parameters using One-Euro Filters.
     """
 
-    def __init__(self, freq=30.0, min_cutoff=1.0, beta=0.05):
-        self.filters = [OneEuroFilter(freq, min_cutoff, beta) for _ in range(10)]
+    def __init__(self, freq=30.0, fcmin=1.0, beta=0.05):
+        self.filters = [OneEuroFilter(freq, fcmin, beta) for _ in range(10)]
 
     def smooth(self, params):
         smoothed_params = np.array(
@@ -262,20 +294,31 @@ class TemporalSmoother:
 
     def __init__(
         self,
+        video_fps=30.0,
+        translation_fcmin=0.1,
+        translation_beta=0.05,
+        scale_fcmin=0.01,
+        scale_beta=0.01,
+        rotation_fcmin=0.05,
+        rotation_beta=0.01,
         shape_alpha=0.05,
-        expr_freq=30.0,
+        expr_fcmin=1.0,
         expr_beta=0.05,
-        trans_freq=1.0,
-        trans_beta=0.0,
-        kf_R=1e-2,
-        kf_Q=1e-3,
     ):
 
         self.transform_smoother = TransformSmoother(
-            freq=trans_freq, one_euro_beta=trans_beta, kf_R=kf_R, kf_Q=kf_Q
+            translation_fcmin,
+            translation_beta,
+            scale_fcmin,
+            scale_beta,
+            rotation_fcmin,
+            rotation_beta,
+            freq=video_fps,
         )
         self.shape_smoother = ShapeSmoother(alpha=shape_alpha)
-        self.expression_smoother = ExpressionSmoother(freq=expr_freq, beta=expr_beta)
+        self.expression_smoother = ExpressionSmoother(
+            freq=video_fps, fcmin=expr_fcmin, beta=expr_beta
+        )
 
     def smooth(self, params):
         # 1. Split the 62-D vector (as per paper)

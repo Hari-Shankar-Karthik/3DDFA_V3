@@ -9,7 +9,8 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 import yaml
-from pathlib import Path
+
+# from pathlib import Path
 
 from FaceBoxes import FaceBoxes
 from TDDFA import TDDFA
@@ -22,13 +23,15 @@ from temporal_smoother import TemporalSmoother
 
 def main(args):
     smoother_hyperparams = {
-        "shape_alpha": 0.05,
-        "expr_freq": 30.0,
-        "expr_beta": 0.05,
-        "trans_freq": 30.0,
-        "trans_beta": 0.0,
-        "kf_R": 1e-1,
-        "kf_Q": 5e-3,
+        "video_fps": 30.0,
+        "translation_fcmin": 1e-10,
+        "translation_beta": 0.0,
+        "scale_fcmin": 1e-10,
+        "scale_beta": 0.0,
+        "rotation_fcmin": 1e-10,
+        "rotation_beta": 0.0,
+        "expr_fcmin": 1e-10,
+        "expr_beta": 0.0,
     }
     hyperparams = "_".join(str(v) for v in smoother_hyperparams.values())
 
@@ -70,6 +73,7 @@ def main(args):
 
         if args.save_mode == "video":
             fps = reader.get_meta_data()["fps"]
+            print(f"fps = {fps}")
             writer = imageio.get_writer(output_fp, fps=fps)
         else:
             # List to store all predicted landmarks
@@ -105,18 +109,19 @@ def main(args):
 
         # NEW: Smooth before reconstructing vertices
         raw_param = param_lst[0]
+        ver_raw = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
+        pre_ver = ver_raw
         smoothed_param = smoother.smooth(raw_param)
-        param_lst = [smoothed_param]
-
-        # refine
-        ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
-        pre_ver = ver  # for tracking
+        ver_smooth = tddfa.recon_vers(
+            [smoothed_param], roi_box_lst, dense_flag=dense_flag
+        )[0]
 
         if args.use_webcam:
             if args.opt == "2d_sparse":
-                img_draw = cv_draw_landmark(frame_bgr, ver)  # since we use padding
+                # since we use padding
+                img_draw = cv_draw_landmark(frame_bgr, ver_smooth)
             elif args.opt == "2d_dense":
-                img_draw = cv_draw_landmark(frame_bgr, [ver], tddfa.tri)
+                img_draw = cv_draw_landmark(frame_bgr, [ver_smooth], tddfa.tri)
             else:
                 raise ValueError(f"Unknown opt {args.opt}")
 
@@ -130,13 +135,13 @@ def main(args):
                 # NEW: Extract and save landmarks
                 # ver is (3, 68), we take x, y rows ([:2, :]) -> (2, 68)
                 # then transpose (.T) -> (68, 2)
-                sparse_landmarks_2d = ver[:2, :].T
+                sparse_landmarks_2d = ver_smooth[:2, :].T
                 landmarks_list.append(sparse_landmarks_2d)
             else:  # video
                 if args.opt == "2d_sparse":
-                    res = cv_draw_landmark(frame_bgr, ver)
+                    res = cv_draw_landmark(frame_bgr, ver_smooth)
                 elif args.opt == "3d":
-                    res = render(frame_bgr, [ver], tddfa.tri)
+                    res = render(frame_bgr, [ver_smooth], tddfa.tri)
                 else:
                     raise ValueError(f"Unknown opt {args.opt}")
 
@@ -163,7 +168,11 @@ if __name__ == "__main__":
         "-o", "--opt", type=str, default="2d_sparse", choices=["2d_sparse", "3d"]
     )
     parser.add_argument(
-        "--save_mode", type=str, default="landmarks", choices=["landmarks", "video"]
+        "-s",
+        "--save_mode",
+        type=str,
+        default="landmarks",
+        choices=["landmarks", "video"],
     )
     parser.add_argument("--onnx", action="store_true", default=True)
 
