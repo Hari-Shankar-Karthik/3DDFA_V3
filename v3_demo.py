@@ -1,4 +1,3 @@
-# ADAPTED from demo_video.py
 # coding: utf-8
 
 __author__ = "cleardusk"
@@ -10,36 +9,27 @@ import numpy as np
 from tqdm import tqdm
 import yaml
 
-# from pathlib import Path
-
 from FaceBoxes import FaceBoxes
 from TDDFA import TDDFA
 from utils.render import render
 
 # from utils.render_ctypes import render
-from utils.functions import cv_draw_landmark, get_suffix
+from utils.functions import cv_draw_landmark
 from temporal_smoother import TemporalSmoother
 
 
 def main(args):
     smoother_hyperparams = {
         "video_fps": 30.0,
-        "translation_fcmin": 1e-10,
+        "translation_fcmin": 0.01,
         "translation_beta": 0.0,
-        "scale_fcmin": 1e-10,
+        "scale_fcmin": 1.0,
         "scale_beta": 0.0,
-        "rotation_fcmin": 1e-10,
+        "rotation_fcmin": 0.01,
         "rotation_beta": 0.0,
-        "expr_fcmin": 1e-10,
+        "expr_fcmin": 0.001,
         "expr_beta": 0.0,
     }
-    hyperparams = "_".join(str(v) for v in smoother_hyperparams.values())
-
-    if args.save_mode == "landmarks":
-        output_fp = f"tuning/landmarks/{args.video_num}_{hyperparams}.npy"
-    else:  # video
-        output_fp = f"tuning/videos/{args.video_num}_{hyperparams}.avi"
-
     cfg = yaml.load(open(args.config), Loader=yaml.SafeLoader)
 
     # Init FaceBoxes and TDDFA, recommend using onnx flag
@@ -59,31 +49,15 @@ def main(args):
         tddfa = TDDFA(gpu_mode=gpu_mode, **cfg)
         face_boxes = FaceBoxes()
 
-    writer = None
-    landmarks_list = None
-
-    if args.use_webcam:
-        # Given a camera
-        # before run this line, make sure you have installed `imageio-ffmpeg`
-        reader = imageio.get_reader("<video0>")
-    else:
-        # Given a video path
-        video_fp = f"300VW_Dataset_2015_12_14/{args.video_num}/vid.avi"
-        reader = imageio.get_reader(video_fp)
-
-        if args.save_mode == "video":
-            fps = reader.get_meta_data()["fps"]
-            print(f"fps = {fps}")
-            writer = imageio.get_writer(output_fp, fps=fps)
-        else:
-            # List to store all predicted landmarks
-            landmarks_list = []
+    # Given a camera
+    # before run this line, make sure you have installed `imageio-ffmpeg`
+    reader = imageio.get_reader("<video0>")
 
     # NEW: Initialize the smoother
     smoother = TemporalSmoother(**smoother_hyperparams)
 
     # run
-    dense_flag = args.opt in ("3d",)
+    dense_flag = args.opt in ("2d_dense", "3d")
     pre_ver = None
     for i, frame in tqdm(enumerate(reader)):
         frame_bgr = frame[..., ::-1]  # RGB->BGR
@@ -116,63 +90,34 @@ def main(args):
             [smoothed_param], roi_box_lst, dense_flag=dense_flag
         )[0]
 
-        if args.use_webcam:
-            if args.opt == "2d_sparse":
-                # since we use padding
-                img_draw = cv_draw_landmark(frame_bgr, ver_smooth)
-            elif args.opt == "2d_dense":
-                img_draw = cv_draw_landmark(frame_bgr, [ver_smooth], tddfa.tri)
-            else:
-                raise ValueError(f"Unknown opt {args.opt}")
-
-            cv2.imshow("image", img_draw)
-            k = cv2.waitKey(20)
-            if k & 0xFF == ord("q"):
-                break
-
+        if args.opt == "2d_sparse":
+            # since we use padding
+            img_draw = cv_draw_landmark(frame_bgr, ver_smooth)
+        elif args.opt == "2d_dense":
+            img_draw = cv_draw_landmark(frame_bgr, ver_smooth, size=1)
+        elif args.opt == "3d":
+            img_draw = render(frame_bgr, [ver_smooth], tddfa.tri, alpha=0.7)
         else:
-            if args.save_mode == "landmarks":
-                # NEW: Extract and save landmarks
-                # ver is (3, 68), we take x, y rows ([:2, :]) -> (2, 68)
-                # then transpose (.T) -> (68, 2)
-                sparse_landmarks_2d = ver_smooth[:2, :].T
-                landmarks_list.append(sparse_landmarks_2d)
-            else:  # video
-                if args.opt == "2d_sparse":
-                    res = cv_draw_landmark(frame_bgr, ver_smooth)
-                elif args.opt == "3d":
-                    res = render(frame_bgr, [ver_smooth], tddfa.tri)
-                else:
-                    raise ValueError(f"Unknown opt {args.opt}")
+            raise ValueError(f"Unknown opt {args.opt}")
 
-                writer.append_data(res[..., ::-1])  # BGR->RGB
-
-    if not args.use_webcam:
-        if args.save_mode == "landmarks":
-            # NEW: Save all landmarks to a file
-            landmarks_array = np.array(landmarks_list)
-            np.save(output_fp, landmarks_array)
-            print(f"Saved {len(landmarks_array)} frames of landmarks to {output_fp}")
-        else:  # video
-            writer.close()
-            print(f"Dump to {output_fp}")
+        cv2.imshow("image", img_draw)
+        k = cv2.waitKey(20)
+        if k & 0xFF == ord("q"):
+            break
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="The demo of video of 3DDFA_V2")
+    parser = argparse.ArgumentParser(
+        description="The smooth demo of webcam of 3DDFA_V2"
+    )
     parser.add_argument("-c", "--config", type=str, default="configs/mb1_120x120.yml")
-    parser.add_argument("-w", "--use_webcam", action="store_true", default=False)
-    parser.add_argument("-f", "--video_num", type=str)
     parser.add_argument("-m", "--mode", default="gpu", type=str, help="gpu or cpu mode")
     parser.add_argument(
-        "-o", "--opt", type=str, default="2d_sparse", choices=["2d_sparse", "3d"]
-    )
-    parser.add_argument(
-        "-s",
-        "--save_mode",
+        "-o",
+        "--opt",
         type=str,
-        default="landmarks",
-        choices=["landmarks", "video"],
+        default="2d_sparse",
+        choices=["2d_sparse", "2d_dense", "3d"],
     )
     parser.add_argument("--onnx", action="store_true", default=True)
 
