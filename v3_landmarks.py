@@ -4,32 +4,18 @@ __author__ = "cleardusk"
 
 import argparse
 import imageio
-import cv2
 import numpy as np
 from tqdm import tqdm
 import yaml
 
 from FaceBoxes import FaceBoxes
 from TDDFA import TDDFA
-from utils.render import render
 
-# from utils.render_ctypes import render
-from utils.functions import cv_draw_landmark
 from temporal_smoother import TemporalSmoother
+from hyperparams import smoother_hyperparams
 
 
 def main(args):
-    smoother_hyperparams = {
-        "video_fps": 30.0,
-        "translation_fcmin": 1e1,
-        "translation_beta": 0.0,
-        "scale_fcmin": 1e1,
-        "scale_beta": 0.0,
-        "rotation_fcmin": 1e1,
-        "rotation_beta": 0.0,
-        "expr_fcmin": 1e-8,
-        "expr_beta": 0.0,
-    }
     cfg = yaml.load(open(args.config), Loader=yaml.SafeLoader)
 
     # Init FaceBoxes and TDDFA, recommend using onnx flag
@@ -53,15 +39,11 @@ def main(args):
     # before run this line, make sure you have installed `imageio-ffmpeg`
     reader = imageio.get_reader(args.video_input)
 
-    # Set up video writer
-    meta_data = reader.get_meta_data()
-    fps = meta_data.get("fps", 30)
-    size = meta_data["size"]
-    fourcc = cv2.VideoWriter_fourcc(*"XVID")
-    writer = cv2.VideoWriter(args.video_output, fourcc, fps, tuple(size))
-
     # NEW: Initialize the smoother
     smoother = TemporalSmoother(**smoother_hyperparams)
+
+    # Initialize landmarks list
+    landmarks_list = []
 
     # run
     dense_flag = args.opt in ("2d_dense", "3d")
@@ -92,33 +74,32 @@ def main(args):
         raw_param = param_lst[0]
         ver_raw = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
         pre_ver = ver_raw
-        smoothed_param = smoother.smooth(raw_param)
+        if args.no_smooth:
+            smoothed_param = raw_param
+        else:
+            smoothed_param = smoother.smooth(raw_param)
         ver_smooth = tddfa.recon_vers(
             [smoothed_param], roi_box_lst, dense_flag=dense_flag
         )[0]
 
-        if args.opt == "2d_sparse":
-            # since we use padding
-            img_draw = cv_draw_landmark(frame_bgr, ver_smooth)
-        elif args.opt == "2d_dense":
-            img_draw = cv_draw_landmark(frame_bgr, ver_smooth, size=1)
-        elif args.opt == "3d":
-            img_draw = render(frame_bgr, [ver_smooth], tddfa.tri, alpha=0.7)
-        else:
-            raise ValueError(f"Unknown opt {args.opt}")
+        # Landmark extraction
+        # ver_smooth is (3, N), we take x, y rows ([:2, :]) -> (2, N)
+        # then transpose (.T) -> (N, 2)
+        sparse_landmarks_2d = ver_smooth[:2, :].T
+        landmarks_list.append(sparse_landmarks_2d)
 
-        # Write frame to video file
-        writer.write(img_draw)
-
-    # Release resources
-    writer.release()
+    # --- Save landmarks and release reader
     reader.close()
-    print(f"\nFinished processing. Video saved to: {args.video_output}")
+    landmarks_array = np.array(landmarks_list)
+    np.save(args.o_landmarks, landmarks_array)
+
+    print(f"\nFinished processing. Landmarks saved to: {args.o_landmarks}")
+    print(f"Output shape: {landmarks_array.shape} (Frames, N_Landmarks, 2)")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="The smooth demo of 3DDFA_V2 for video files"
+        description="The smooth demo of 3DDFA_V2 for video files, saving landmarks"
     )
 
     parser.add_argument(
@@ -129,11 +110,11 @@ if __name__ == "__main__":
         help="Path to the input video file (.avi)",
     )
     parser.add_argument(
-        "-o_vid",
-        "--video_output",
+        "-o_lmk",
+        "--o_landmarks",
         type=str,
         required=True,
-        help="Path to save the output video file (.avi)",
+        help="Path to save the output landmarks .npy file",
     )
 
     parser.add_argument("-c", "--config", type=str, default="configs/mb1_120x120.yml")
@@ -146,6 +127,7 @@ if __name__ == "__main__":
         choices=["2d_sparse", "2d_dense", "3d"],
     )
     parser.add_argument("--onnx", action="store_true", default=True)
+    parser.add_argument("-n", "--no_smooth", action="store_true", default=False)
 
     args = parser.parse_args()
     main(args)

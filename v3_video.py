@@ -5,7 +5,6 @@ __author__ = "cleardusk"
 import argparse
 import imageio
 import cv2
-import numpy as np
 from tqdm import tqdm
 import yaml
 
@@ -13,23 +12,12 @@ from FaceBoxes import FaceBoxes
 from TDDFA import TDDFA
 from utils.render import render
 
-# from utils.render_ctypes import render
 from utils.functions import cv_draw_landmark
 from temporal_smoother import TemporalSmoother
+from hyperparams import smoother_hyperparams
 
 
 def main(args):
-    smoother_hyperparams = {
-        "video_fps": 30.0,
-        "translation_fcmin": 1e1,
-        "translation_beta": 0.0,
-        "scale_fcmin": 1e1,
-        "scale_beta": 0.0,
-        "rotation_fcmin": 1e1,
-        "rotation_beta": 0.0,
-        "expr_fcmin": 1e-8,
-        "expr_beta": 0.0,
-    }
     cfg = yaml.load(open(args.config), Loader=yaml.SafeLoader)
 
     # Init FaceBoxes and TDDFA, recommend using onnx flag

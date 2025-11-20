@@ -2,6 +2,8 @@ import numpy as np
 import argparse
 import os
 import glob
+from tqdm import tqdm
+import pandas as pd
 
 
 def parse_pts_file(filepath):
@@ -121,6 +123,9 @@ def calculate_paper_metrics(pred_landmarks, gt_landmarks, gt_bboxes):
             stability_t = np.mean(l2_distances_stability) / norm_factor
             stability_errors.append(stability_t)
 
+    if not nme_errors:
+        return None, None
+
     # Average the errors and convert to percentage
     final_nme = np.mean(nme_errors) * 100
     final_stability = np.mean(stability_errors) * 100
@@ -129,52 +134,95 @@ def calculate_paper_metrics(pred_landmarks, gt_landmarks, gt_bboxes):
 
 
 def main(args):
-    # 1. Load your predicted landmarks
-    try:
-        pred_landmarks = np.load(args.preds)
-        print(
-            f"Loaded predicted landmarks from {args.preds} (Shape: {pred_landmarks.shape})"
-        )
-    except Exception as e:
-        print(f"Error: Could not load predictions file: {args.preds}")
-        print(e)
-        return
+    N = args.N
 
-    # 2. Load the ground truth data
-    try:
-        gt_landmarks, gt_bboxes = load_ground_truth(args.gt_dir)
-        print(f"Loaded {len(gt_landmarks)} ground-truth frames from {args.gt_dir}")
-    except Exception as e:
-        print(f"Error: Could not load ground-truth data from directory: {args.gt_dir}")
-        print(e)
-        return
+    results = {}
 
-    # 3. Calculate metrics
-    nme, stability = calculate_paper_metrics(pred_landmarks, gt_landmarks, gt_bboxes)
+    # Ensure the output directory exists
+    output_dir = "preds"
+    os.makedirs(output_dir, exist_ok=True)
 
-    if nme is not None:
-        print("\n--- Final Metrics (Lower is Better) ---")
-        print(f"  NME (Accuracy):     {nme:.4f}%")
-        print(f"  Stability (Jitter): {stability:.4f}%")
-        print("-----------------------------------------")
+    # Iterate from 1 up to and including N
+    for i in tqdm(range(1, N + 1)):
+        # Format the index i as a 3-digit string (e.g., 1 -> '001', 59 -> '059')
+        video_id = f"{i:03d}"
+
+        # Define paths based on your requested structure
+        gt_dir = os.path.join("300VW_Dataset_2015_12_14", video_id, "annot")
+        preds_base_dir = os.path.join("preds", video_id)
+
+        baseline_file = os.path.join(preds_base_dir, "baseline.npy")
+        v3_file = os.path.join(preds_base_dir, "v3.npy")
+
+        video_results = {}
+        gt_landmarks, gt_bboxes = None, None
+
+        # 1. Load Ground Truth Data (once per video)
+        try:
+            gt_landmarks, gt_bboxes = load_ground_truth(gt_dir)
+        except FileNotFoundError:
+            continue
+        except Exception as e:
+            print(f"Error loading ground truth for {video_id} from {gt_dir}: {e}")
+            continue
+
+        # 2. Calculate Baseline Metrics
+        try:
+            pred_landmarks_baseline = np.load(baseline_file)
+            nme_b, stab_b = calculate_paper_metrics(
+                pred_landmarks_baseline, gt_landmarks.copy(), gt_bboxes.copy()
+            )
+            video_results["NME_baseline"] = nme_b
+            video_results["Stability_baseline"] = stab_b
+        except FileNotFoundError:
+            video_results["NME_baseline"] = np.nan
+            video_results["Stability_baseline"] = np.nan
+        except Exception as e:
+            print(f"Error calculating baseline metrics: {e}")
+            video_results["NME_baseline"] = np.nan
+            video_results["Stability_baseline"] = np.nan
+
+        # 3. Calculate V3 Metrics
+        try:
+            pred_landmarks_v3 = np.load(v3_file)
+            nme_v3, stab_v3 = calculate_paper_metrics(
+                pred_landmarks_v3, gt_landmarks.copy(), gt_bboxes.copy()
+            )
+            video_results["NME_v3"] = nme_v3
+            video_results["Stability_v3"] = stab_v3
+        except FileNotFoundError:
+            video_results["NME_v3"] = np.nan
+            video_results["Stability_v3"] = np.nan
+        except Exception as e:
+            print(f"Error calculating v3 metrics: {e}")
+            video_results["NME_v3"] = np.nan
+            video_results["Stability_v3"] = np.nan
+
+        # Store results for this video, keyed by the index 'i'
+        results[i] = video_results
+
+    # 4. Create and Save Pandas DataFrame
+    if results:
+        # Create DataFrame from the dictionary, using index 'i' as the row index
+        df = pd.DataFrame.from_dict(results, orient="index")
+        df.index.name = "Video_ID"
+
+        output_file = os.path.join(output_dir, "metrics_summary.csv")
+        df.to_csv(output_file)
+
+        print(f"Evaluation complete. Results saved to: {output_file}")
+    else:
+        print("\nNo results to save. Check file paths and input argument N.")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Calculate 3DDFA-V2 NME and Stability metrics."
+        description="Calculate 3DDFA-V2 NME and Stability metrics for a range of videos."
     )
     parser.add_argument(
-        "--preds",
-        type=str,
-        required=True,
-        help="Path to the .npy file containing predicted landmarks.",
+        "N",
+        type=int,
+        help="The upper limit for the video index (i.e., N in i=1..N).",
     )
-    parser.add_argument(
-        "--gt_dir",
-        type=str,
-        required=True,
-        help="Path to the *directory* containing ground-truth .pts files for the video.",
-    )
-
     args = parser.parse_args()
     main(args)
