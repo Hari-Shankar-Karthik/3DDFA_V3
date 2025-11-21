@@ -49,12 +49,13 @@ def main(args):
     writer = cv2.VideoWriter(args.video_output, fourcc, fps, tuple(size))
 
     # NEW: Initialize the smoother
-    smoother = TemporalSmoother(**smoother_hyperparams)
+    smoother = TemporalSmoother(video_fps=fps, **smoother_hyperparams)
 
     # run
     dense_flag = args.opt in ("2d_dense", "3d")
     pre_ver = None
     for i, frame in tqdm(enumerate(reader), total=reader.count_frames()):
+        timestamp = i / fps
         frame_bgr = frame[..., ::-1]  # RGB->BGR
 
         if i == 0:
@@ -80,7 +81,7 @@ def main(args):
         raw_param = param_lst[0]
         ver_raw = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
         pre_ver = ver_raw
-        smoothed_param = smoother.smooth(raw_param)
+        smoothed_param = smoother.smooth(raw_param, t=timestamp)
         ver_smooth = tddfa.recon_vers(
             [smoothed_param], roi_box_lst, dense_flag=dense_flag
         )[0]

@@ -51,7 +51,6 @@ class KalmanSmoother1D:
         return self.x[0]
 
 
-# HELPER CLASS: One-Euro Filter
 class OneEuroFilter:
     """
     Implementation of the 1-Euro Filter.
@@ -71,11 +70,10 @@ class OneEuroFilter:
         """Creates a new exponential moving average filter."""
         return {"val": 0.0, "s": 0.0, "initialized": False}
 
-    def _alpha(self, cutoff):
-        """Calculates the alpha value for a given cutoff frequency."""
-        te = 1.0 / self.freq
+    def _alpha(self, cutoff, dt):
+        """Calculates the alpha value for a given cutoff frequency and dt."""
         tau = 1.0 / (2 * np.pi * cutoff)
-        return 1.0 / (1.0 + tau / te)
+        return 1.0 / (1.0 + tau / dt)
 
     def _ema(self, f, x, alpha):
         """Applies the EMA filter."""
@@ -89,26 +87,36 @@ class OneEuroFilter:
 
     def filter(self, x, t=None):
         """Filters a new value x at time t."""
+        # 1. Handle time
         if t is None:
             if self.last_t is None:
                 self.last_t = 0.0
             t = self.last_t + 1.0 / self.freq
+
+        # Calculate dynamic dt
+        if self.last_t is not None and t != self.last_t:
+            dt = t - self.last_t
+        else:
+            dt = 1.0 / self.freq
+
         self.last_t = t
 
-        # Calculate derivative
+        # 2. Calculate derivative (Velocity)
         if self.x_filter["initialized"]:
-            dx = (x - self.x_filter["s"]) * self.freq
+            dx = (x - self.x_filter["s"]) / dt  # velocity = delta_x / delta_t
         else:
             dx = 0.0
 
-        # Filter the derivative
-        self.dx_filter = self._ema(self.dx_filter, abs(dx), self._alpha(self.d_cutoff))
+        # 3. Filter the derivative
+        dx_alpha = self._alpha(self.d_cutoff, dt)  # <--- calling with dt
+        self.dx_filter = self._ema(self.dx_filter, abs(dx), dx_alpha)
 
-        # Calculate adaptive cutoff
+        # 4. Calculate adaptive cutoff
         cutoff = self.fcmin + self.beta * self.dx_filter["val"]
 
-        # Filter the signal
-        self.x_filter = self._ema(self.x_filter, x, self._alpha(cutoff))
+        # 5. Filter the signal
+        x_alpha = self._alpha(cutoff, dt)  # <--- calling with dt
+        self.x_filter = self._ema(self.x_filter, x, x_alpha)
 
         return self.x_filter["val"]
 
@@ -119,7 +127,6 @@ class OneEuroFilter:
 class TransformSmoother:
     """
     Smooths the 12-D transformation parameters.
-    # - Translation (3 params): Kalman Filter
     - Translation (3 params): One-Euro Filter
     - Rotation (as 4D quaternion): One-Euro Filter
     - Scale (1 param): One-Euro Filter
@@ -191,7 +198,7 @@ class TransformSmoother:
         )
         return R
 
-    def smooth(self, params):
+    def smooth(self, params, t=None):
         # 1. DECOMPOSITION
         T = params.reshape(3, 4)
         t_vec = T[:, 3]
@@ -207,13 +214,13 @@ class TransformSmoother:
 
         # 2. FILTERING
         # Filter translation with One-Euro filters
-        t_x_smooth = self.one_euro_x.filter(t_vec[0])
-        t_y_smooth = self.one_euro_y.filter(t_vec[1])
-        t_z_smooth = self.one_euro_z.filter(t_vec[2])
+        t_x_smooth = self.one_euro_x.filter(t_vec[0], t)
+        t_y_smooth = self.one_euro_y.filter(t_vec[1], t)
+        t_z_smooth = self.one_euro_z.filter(t_vec[2], t)
         t_smooth = np.array([t_x_smooth, t_y_smooth, t_z_smooth])
 
         # Filter scale with One-Euro Filter
-        s_smooth = self.one_euro_s.filter(scale)
+        s_smooth = self.one_euro_s.filter(scale, t)
 
         # Filter quaternion with One-Euro Filters
 
@@ -225,10 +232,10 @@ class TransformSmoother:
 
         q_smooth = np.array(
             [
-                self.one_euro_q[0].filter(q[0]),
-                self.one_euro_q[1].filter(q[1]),
-                self.one_euro_q[2].filter(q[2]),
-                self.one_euro_q[3].filter(q[3]),
+                self.one_euro_q[0].filter(q[0], t),
+                self.one_euro_q[1].filter(q[1], t),
+                self.one_euro_q[2].filter(q[2], t),
+                self.one_euro_q[3].filter(q[3], t),
             ]
         )
 
@@ -278,9 +285,9 @@ class ExpressionSmoother:
     def __init__(self, freq=30.0, fcmin=1.0, beta=0.05):
         self.filters = [OneEuroFilter(freq, fcmin, beta) for _ in range(10)]
 
-    def smooth(self, params):
+    def smooth(self, params, t=None):
         smoothed_params = np.array(
-            [self.filters[i].filter(params[i]) for i in range(10)]
+            [self.filters[i].filter(params[i], t) for i in range(10)]
         )
         return smoothed_params
 
@@ -320,16 +327,16 @@ class TemporalSmoother:
             freq=video_fps, fcmin=expr_fcmin, beta=expr_beta
         )
 
-    def smooth(self, params):
+    def smooth(self, params, t=None):
         # 1. Split the 62-D vector (as per paper)
         pose_params = params[:12]  # 12 transform params
         shape_params = params[12:52]  # 40 shape params
         exp_params = params[52:]  # 10 expression params
 
         # 2. Smooth each part individually
-        smoothed_pose = self.transform_smoother.smooth(pose_params)
+        smoothed_pose = self.transform_smoother.smooth(pose_params, t)
         smoothed_shape = self.shape_smoother.smooth(shape_params)
-        smoothed_exp = self.expression_smoother.smooth(exp_params)
+        smoothed_exp = self.expression_smoother.smooth(exp_params, t)
 
         # 3. Recombine and return
         return np.concatenate([smoothed_pose, smoothed_shape, smoothed_exp])

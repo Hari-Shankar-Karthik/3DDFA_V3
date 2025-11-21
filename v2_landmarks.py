@@ -11,10 +11,6 @@ from collections import deque
 
 from FaceBoxes import FaceBoxes
 from TDDFA import TDDFA
-from utils.render import render
-
-# from utils.render_ctypes import render
-from utils.functions import cv_draw_landmark, get_suffix
 
 
 def main(args):
@@ -38,22 +34,14 @@ def main(args):
         face_boxes = FaceBoxes()
 
     # Given a video path
-    fn = args.video_fp.split("/")[-1]
-    reader = imageio.get_reader(args.video_fp)
-
-    fps = reader.get_meta_data()["fps"]
-    suffix = get_suffix(args.video_fp)
-    video_wfp = (
-        f'examples/results/videos/{fn.replace(suffix, "")}_{args.opt}_smooth.mp4'
-    )
-    writer = imageio.get_writer(video_wfp, fps=fps)
+    reader = imageio.get_reader(args.video_input)
 
     # the simple implementation of average smoothing by looking ahead by n_next frames
     # assert the frames of the video >= n
     n_pre, n_next = args.n_pre, args.n_next
     n = n_pre + n_next + 1
     queue_ver = deque()
-    queue_frame = deque()
+    landmarks_list = []
 
     # run
     dense_flag = args.opt in (
@@ -85,10 +73,6 @@ def main(args):
                 queue_ver.append(ver.copy())
             queue_ver.append(ver.copy())
 
-            for _ in range(n_pre):
-                queue_frame.append(frame_bgr.copy())
-            queue_frame.append(frame_bgr.copy())
-
         else:
             param_lst, roi_box_lst = tddfa(frame_bgr, [pre_ver], crop_policy="landmark")
 
@@ -102,7 +86,6 @@ def main(args):
             ver = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
 
             queue_ver.append(ver.copy())
-            queue_frame.append(frame_bgr.copy())
 
         pre_ver = ver  # for tracking
 
@@ -110,53 +93,54 @@ def main(args):
         if len(queue_ver) >= n:
             ver_ave = np.mean(queue_ver, axis=0)
 
-            if args.opt == "2d_sparse":
-                img_draw = cv_draw_landmark(
-                    queue_frame[n_pre], ver_ave
-                )  # since we use padding
-            elif args.opt == "2d_dense":
-                img_draw = cv_draw_landmark(queue_frame[n_pre], ver_ave, size=1)
-            elif args.opt == "3d":
-                img_draw = render(queue_frame[n_pre], [ver_ave], tddfa.tri, alpha=0.7)
-            else:
-                raise ValueError(f"Unknown opt {args.opt}")
-
-            writer.append_data(img_draw[:, :, ::-1])  # BGR->RGB
+            # Format for storage: (2, N) -> (N, 2)
+            # Taking only x,y coordinates
+            smoothed_lmk = ver_ave[:2, :].T
+            landmarks_list.append(smoothed_lmk)
 
             queue_ver.popleft()
-            queue_frame.popleft()
 
     # we will lost the last n_next frames, still padding
     for _ in range(n_next):
         queue_ver.append(ver.copy())
-        queue_frame.append(frame_bgr.copy())  # the last frame
 
         ver_ave = np.mean(queue_ver, axis=0)
 
-        if args.opt == "2d_sparse":
-            img_draw = cv_draw_landmark(
-                queue_frame[n_pre], ver_ave
-            )  # since we use padding
-        elif args.opt == "2d_dense":
-            img_draw = cv_draw_landmark(queue_frame[n_pre], ver_ave, size=1)
-        elif args.opt == "3d":
-            img_draw = render(queue_frame[n_pre], [ver_ave], tddfa.tri, alpha=0.7)
-        else:
-            raise ValueError(f"Unknown opt {args.opt}")
-
-        writer.append_data(img_draw[..., ::-1])  # BGR->RGB
+        # Format for storage
+        smoothed_lmk = ver_ave[:2, :].T
+        landmarks_list.append(smoothed_lmk)
 
         queue_ver.popleft()
-        queue_frame.popleft()
 
-    writer.close()
-    print(f"Dump to {video_wfp}")
+    reader.close()
+
+    # Save to .npy
+    landmarks_array = np.array(landmarks_list)
+    try:
+        np.save(args.o_landmarks, landmarks_array)
+        print(f"Finished processing. Landmarks saved to: {args.o_landmarks}")
+        print(f"Output shape: {landmarks_array.shape} (Frames, N_Landmarks, 2)")
+    except Exception as e:
+        print(f"Error saving file: {e}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="The smooth demo of video of 3DDFA_V2")
     parser.add_argument("-c", "--config", type=str, default="configs/mb1_120x120.yml")
-    parser.add_argument("-f", "--video_fp", type=str)
+    parser.add_argument(
+        "-i",
+        "--video_input",
+        type=str,
+        required=True,
+        help="Path to the input video file",
+    )
+    parser.add_argument(
+        "-o_lmk",
+        "--o_landmarks",
+        type=str,
+        required=True,
+        help="Path to save the output landmarks .npy file",
+    )
     parser.add_argument("-m", "--mode", default="cpu", type=str, help="gpu or cpu mode")
     parser.add_argument(
         "-n_pre", default=1, type=int, help="the pre frames of smoothing"

@@ -15,6 +15,7 @@ from utils.render import render
 from utils.functions import cv_draw_landmark
 from temporal_smoother import TemporalSmoother
 from hyperparams import smoother_hyperparams
+import time
 
 
 def main(args):
@@ -71,9 +72,10 @@ def main(args):
 
         # NEW: Smooth before reconstructing vertices
         raw_param = param_lst[0]
+        current_time = time.time()
         ver_raw = tddfa.recon_vers(param_lst, roi_box_lst, dense_flag=dense_flag)[0]
         pre_ver = ver_raw
-        smoothed_param = smoother.smooth(raw_param)
+        smoothed_param = smoother.smooth(raw_param, t=current_time)
         ver_smooth = tddfa.recon_vers(
             [smoothed_param], roi_box_lst, dense_flag=dense_flag
         )[0]
