@@ -1,0 +1,498 @@
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+[OneEuroFilter INIT] fcmin=1e-05, beta=0.0, d_cutoff=1.0
+0it [00:00, ?it/s][TransformSmoother] q_raw: [ 0.99873691 -0.01870901  0.03312598  0.03282111], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03743379  0.06627986  0.06566988], angle=0.100533
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870901  0.03312598  0.03282111], norm: 1.000000
+1it [00:00,  2.79it/s][TransformSmoother] q_raw: [ 0.99869912 -0.02664445  0.02967427  0.03177373], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.05331202  0.05937428  0.06357503], angle=0.102026
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870915  0.03312592  0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99876036 -0.02297734  0.02926642  0.03306446], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04597367  0.05855704  0.06615626], angle=0.099595
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870916  0.03312591  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99881546 -0.01865065  0.03134233  0.03221007], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03731605  0.06270942  0.06444558], angle=0.097356
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870916  0.03312591  0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99882421 -0.01845185  0.03096352  0.03241879], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03691817  0.06195133  0.06486299], angle=0.096995
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870915  0.0331259   0.03282109], norm: 1.000000
+5it [00:00, 12.61it/s][TransformSmoother] q_raw: [ 0.9987946  -0.01913574  0.03315361  0.03072459], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03828687  0.06633388  0.06147388], angle=0.098210
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870916  0.0331259   0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99869982 -0.01635729  0.03375589  0.03452038], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03272876  0.06754106  0.0690707 ], angle=0.101999
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870915  0.03312591  0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99879404 -0.02032727  0.03121035  0.03198731], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0406709   0.0624458   0.06400034], angle=0.098233
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870915  0.0331259   0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99875219 -0.01939458  0.03248772  0.03259551], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0388053   0.06500249  0.06521814], angle=0.099923
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870916  0.0331259   0.03282109], norm: 1.000000
+9it [00:00, 19.09it/s][TransformSmoother] q_raw: [ 0.9987102  -0.02068834  0.03260342  0.03296876], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04139448  0.06523489  0.06596588], angle=0.101590
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870916  0.0331259   0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99882705 -0.01328677  0.0341831   0.03161497], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02658394  0.06839295  0.06325468], angle=0.096879
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870915  0.0331259   0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99857883 -0.01537639  0.03832138  0.03369512], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03076735  0.07667909  0.06742219], angle=0.106640
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870914  0.03312591  0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99846085 -0.02440836  0.03603579  0.03437418], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04884178  0.07210858  0.06878366], angle=0.110979
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870915  0.03312592  0.03282109], norm: 1.000000
+13it [00:00, 23.65it/s][TransformSmoother] q_raw: [ 0.99886883 -0.01600439  0.03194487  0.03137593], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03202085  0.06391383  0.06277553], angle=0.095137
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870915  0.03312592  0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99882463 -0.01609188  0.03371893  0.03087801], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03219638  0.0674643   0.06178022], angle=0.096979
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870914  0.03312592  0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99884416 -0.01495407  0.02935626  0.03499904], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02991966  0.05873515  0.07002506], angle=0.096169
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870914  0.03312591  0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99885918 -0.01410945  0.03092305  0.03354157], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02822963  0.06186963  0.06710866], angle=0.095542
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870913  0.03312591  0.03282109], norm: 1.000000
+17it [00:00, 26.71it/s][TransformSmoother] q_raw: [ 0.99868445 -0.02000749  0.03386728  0.03289492], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04003254  0.06776429  0.0658187 ], angle=0.102600
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870913  0.03312591  0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.998775   -0.01471916  0.03445195  0.03232501], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02945035  0.06893206  0.06467643], angle=0.099005
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870912  0.03312591  0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99867138 -0.01416522  0.03488156  0.03518652], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02834299  0.06979403  0.07040423], angle=0.103108
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870911  0.03312591  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99879548 -0.01758239  0.03185352  0.0329213 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0351789   0.06373263  0.06586905], angle=0.098174
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870911  0.03312591  0.0328211 ], norm: 1.000000
+21it [00:00, 28.14it/s][TransformSmoother] q_raw: [ 0.99868456 -0.02006261  0.03407418  0.03264351], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04014283  0.06817825  0.06531566], angle=0.102596
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870911  0.03312591  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99866348 -0.01868432  0.03352875  0.03461179], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0373853   0.06708738  0.06925443], angle=0.103414
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870911  0.03312591  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99863363 -0.02159364  0.03612983  0.03097132], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04320697  0.0722926   0.06197086], angle=0.104563
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870912  0.03312592  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99862834 -0.01916641  0.03497423  0.03392477], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03835035  0.06998046  0.06788058], angle=0.104765
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870912  0.03312592  0.0328211 ], norm: 1.000000
+25it [00:01, 28.52it/s][TransformSmoother] q_raw: [ 0.99869528 -0.01767754  0.0342782   0.03346996], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03537046  0.06858624  0.06696904], angle=0.102176
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870912  0.03312593  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99857015 -0.01901966  0.03701075  0.03355768], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03805745  0.07405679  0.06714737], angle=0.106965
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870912  0.03312593  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99871894 -0.01716057  0.03352085  0.03379872], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0343358   0.06707033  0.06762632], angle=0.101246
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870912  0.03312593  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99890769 -0.0138331   0.0317268   0.03139246], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02767629  0.06347672  0.0628078 ], angle=0.093488
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870911  0.03312593  0.0328211 ], norm: 1.000000
+29it [00:01, 30.01it/s][TransformSmoother] q_raw: [ 0.99880056 -0.0129111   0.03226376  0.03449331], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02583252  0.06455332  0.06901421], angle=0.097966
+[TransformSmoother] q_smooth: [ 0.99873691 -0.0187091   0.03312593  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99879901 -0.01485766  0.0339131   0.03208864], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02972722  0.06785337  0.06420298], angle=0.098030
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870909  0.03312593  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99876859 -0.01309437  0.03480796  0.03283667], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02619949  0.06964452  0.0657003 ], angle=0.099264
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870908  0.03312593  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99886427 -0.0155876   0.03218698  0.03148332], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03118701  0.06439835  0.0629905 ], angle=0.095329
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870907  0.03312593  0.0328211 ], norm: 1.000000
+33it [00:01, 31.14it/s][TransformSmoother] q_raw: [ 0.99866217 -0.01910052  0.03312514  0.03481037], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03821808  0.06627985  0.0696518 ], angle=0.103465
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870907  0.03312593  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99886636 -0.0141307   0.03295766  0.03130672], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02827209  0.06594024  0.06263712], angle=0.095241
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870907  0.03312593  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99882387 -0.01489345  0.03209565  0.03315016], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02979858  0.06421648  0.06632632], angle=0.097010
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870906  0.03312593  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99878044 -0.01690373  0.03146604  0.03408502], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03382122  0.06295767  0.06819777], angle=0.098785
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870906  0.03312593  0.0328211 ], norm: 1.000000
+37it [00:01, 31.71it/s][TransformSmoother] q_raw: [ 0.998809   -0.01598388  0.03124959  0.03389054], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03198045  0.06252401  0.067808  ], angle=0.097621
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870905  0.03312592  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99877688 -0.01534095  0.03236322  0.03408843], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03069442  0.06475284  0.06820466], angle=0.098929
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870904  0.03312592  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99894115 -0.01773199  0.02800703  0.03190245], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03547651  0.05603384  0.06382744], angle=0.092045
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870904  0.03312591  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99872855 -0.01740397  0.03456651  0.03230394], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0348227   0.06916233  0.06463527], angle=0.100865
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870904  0.03312591  0.03282111], norm: 1.000000
+41it [00:01, 32.34it/s][TransformSmoother] q_raw: [ 0.99882421 -0.01545892  0.03301327  0.03195851], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03092997  0.06605244  0.06394208], angle=0.096996
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870903  0.03312591  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99882664 -0.01398342  0.03255864  0.03301129], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02797778  0.06514276  0.06604841], angle=0.096895
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870902  0.03312591  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99880861 -0.01328438  0.03473553  0.0315962 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02657932  0.06949866  0.06321751], angle=0.097637
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870901  0.03312592  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99876555 -0.01291116  0.03244573  0.03532629], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02583295  0.06491817  0.07068168], angle=0.099386
+[TransformSmoother] q_smooth: [ 0.99873691 -0.018709    0.03312591  0.03282111], norm: 1.000000
+45it [00:01, 32.29it/s][TransformSmoother] q_raw: [ 0.99889943 -0.01304133  0.03090506  0.03278305], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02609223  0.06183281  0.06559016], angle=0.093841
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870899  0.03312591  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99862607 -0.02055359  0.03476828  0.03338701], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04112601  0.06956842  0.06680461], angle=0.104852
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870899  0.03312591  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99878688 -0.01894238  0.03211355  0.03216628], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03790009  0.06425309  0.06435859], angle=0.098524
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870899  0.03312591  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.9986206  -0.02297252  0.03059639  0.03595851], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04596617  0.06122092  0.0719501 ], angle=0.105060
+[TransformSmoother] q_smooth: [ 0.99873691 -0.018709    0.03312591  0.03282111], norm: 1.000000
+49it [00:01, 31.96it/s][TransformSmoother] q_raw: [ 0.99869048 -0.02333187  0.03067972  0.03364089], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04668412  0.06138624  0.06731116], angle=0.102364
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870902  0.0331259   0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99869534 -0.02332785  0.03147525  0.03275255], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04667601  0.06297789  0.0655336 ], angle=0.102174
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870903  0.03312589  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.9984148  -0.02519652  0.03637554  0.03478278], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.05041968  0.07278955  0.06960233], angle=0.112627
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870905  0.0331259   0.03282112], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99830883 -0.03471734  0.03307544  0.03286634], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.06947384  0.0661882   0.06576975], angle=0.116332
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870908  0.0331259   0.03282112], norm: 1.000000
+53it [00:01, 29.60it/s][TransformSmoother] q_raw: [ 0.99846921 -0.02983267  0.03344467  0.03241445], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0596958   0.06692349  0.06486201], angle=0.110677
+[TransformSmoother] q_smooth: [ 0.99873691 -0.0187091   0.0331259   0.03282112], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99844174 -0.0290727   0.03416882  0.03318688], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.05817561  0.06837315  0.06640826], angle=0.111666
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870912  0.03312591  0.03282112], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99825933 -0.03112484  0.03693646  0.03384163], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.06228583  0.07391581  0.06772256], angle=0.118023
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870914  0.03312591  0.03282112], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99820886 -0.0290954   0.03937105  0.03438676], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.05822557  0.07878915  0.06881462], angle=0.119722
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870916  0.03312593  0.03282112], norm: 1.000000
+57it [00:02, 30.49it/s][TransformSmoother] q_raw: [ 0.99799615 -0.03351091  0.04315578  0.03191064], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.06706661  0.08636926  0.06386395], angle=0.126634
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870919  0.03312594  0.03282112], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99841955 -0.02756035  0.04003134  0.02821905], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.05514976  0.08010489  0.05646786], angle=0.112458
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870921  0.03312596  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99844904 -0.02806159  0.03839723  0.02894322], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.05615221  0.07683418  0.05791638], angle=0.111404
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870923  0.03312597  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99853025 -0.02916948  0.0365429   0.02740621], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.05836756  0.07312164  0.0548393 ], angle=0.108448
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870925  0.03312598  0.0328211 ], norm: 1.000000
+61it [00:02, 30.89it/s][TransformSmoother] q_raw: [ 0.99842225 -0.02495044  0.03815435  0.03278308], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04992714  0.07634887  0.06560066], angle=0.112362
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870926  0.03312599  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99867593 -0.02266408  0.03518161  0.02991622], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.04534818  0.0703943   0.05985886], angle=0.102932
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870927  0.03312599  0.03282109], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99854322 -0.01641318  0.03564587  0.03703274], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03284231  0.07132638  0.07410146], angle=0.107968
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870926  0.033126    0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99871007 -0.01140536  0.03556462  0.03439885], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02282054  0.07115983  0.0688273 ], angle=0.101596
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870925  0.033126    0.03282111], norm: 1.000000
+65it [00:02, 29.47it/s][TransformSmoother] q_raw: [ 0.99872969 -0.01350941  0.03439183  0.03425943], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02703027  0.0688128   0.06854789], angle=0.100820
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870924  0.03312601  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.9987527  -0.01803383  0.03347135  0.03236503], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03608267  0.06697054  0.06475699], angle=0.099902
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870924  0.03312601  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99876297 -0.01347729  0.03650208  0.03095943], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02696571  0.07303429  0.0619444 ], angle=0.099490
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870923  0.03312601  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99857334 -0.01328465  0.03770603  0.03539867], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02658194  0.07544793  0.07083102], angle=0.106846
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870922  0.03312602  0.03282111], norm: 1.000000
+69it [00:02, 30.58it/s][TransformSmoother] q_raw: [ 0.99879635 -0.0092225   0.03842223  0.02906062], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0184524   0.0768753   0.05814458], angle=0.098138
+[TransformSmoother] q_smooth: [ 0.99873691 -0.0187092   0.03312603  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99880977 -0.00996774  0.03529813  0.03215156], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01994339  0.07062429  0.06432865], angle=0.097589
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870918  0.03312603  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99894603 -0.00616196  0.03284577  0.03146453], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01232825  0.06571462  0.06295117], angle=0.091833
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870916  0.03312603  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99872634 -0.00854969  0.03597334  0.03432955], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01710665  0.07197725  0.06868827], angle=0.100953
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870914  0.03312604  0.0328211 ], norm: 1.000000
+73it [00:02, 31.53it/s][TransformSmoother] q_raw: [ 0.99892185 -0.0090274   0.03481172  0.02935615], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0180613   0.06964847  0.05873341], angle=0.092880
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870912  0.03312604  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99891102 -0.00839799  0.03144361  0.03342975], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01680208  0.06291005  0.06688377], angle=0.093346
+[TransformSmoother] q_smooth: [ 0.99873691 -0.0187091   0.03312604  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99882499 -0.00410579  0.03574175  0.03247012], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0082148  0.0715115  0.0649657], angle=0.096963
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870908  0.03312604  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99881215 -0.00780243  0.036226    0.03163992], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01561104  0.07248069  0.0633049 ], angle=0.097492
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870906  0.03312605  0.03282109], norm: 1.000000
+77it [00:02, 32.31it/s][TransformSmoother] q_raw: [ 0.99872478 -0.00560071  0.03522384  0.03573118], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01120618  0.07047765  0.07149275], angle=0.101014
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870903  0.03312605  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99883483 -0.00794254  0.03481116  0.03246654], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01589125  0.06964938  0.06495832], angle=0.096556
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870901  0.03312606  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.9987831  -0.00389923  0.03372858  0.0357702 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00780162  0.06748454  0.07156944], angle=0.098677
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870898  0.03312606  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.9988366  -0.0074373   0.03565815  0.031601  ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01488038  0.07134397  0.06322652], angle=0.096483
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870896  0.03312606  0.0328211 ], norm: 1.000000
+81it [00:02, 32.56it/s][TransformSmoother] q_raw: [ 0.99882124 -0.00560065  0.0338754   0.03431077], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0112057   0.06777743  0.06864852], angle=0.097118
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870894  0.03312606  0.0328211 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99884254 -0.00812957  0.031506    0.03542397], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01626542  0.06303632  0.0708753 ], angle=0.096236
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870892  0.03312606  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99895167 -0.0030089   0.03156054  0.03302183], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0060199   0.06314315  0.06606675], angle=0.091587
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870889  0.03312606  0.03282111], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99898092 -0.00339616  0.02556952  0.03703773], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00679463  0.05115641  0.07410063], angle=0.090300
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870886  0.03312604  0.03282112], norm: 1.000000
+85it [00:02, 32.78it/s][TransformSmoother] q_raw: [ 0.99907693 -0.00791898  0.02580128  0.03341969], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01584284  0.05161845  0.06685995], angle=0.085940
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870884  0.03312603  0.03282112], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99890118 -0.00831751  0.02659954  0.0376791 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01664111  0.05321857  0.07538582], angle=0.093767
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870882  0.03312602  0.03282113], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99906403 -0.00527923  0.02676088  0.03357147], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01056176  0.05353847  0.0671639 ], angle=0.086538
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870879  0.03312601  0.03282113], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99882389 -0.00318933  0.03103011  0.03711876], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00638116  0.06208455  0.07426664], angle=0.097009
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870877  0.033126    0.03282114], norm: 1.000000
+89it [00:03, 33.04it/s][TransformSmoother] q_raw: [ 0.99887816 -0.00311126  0.02857289  0.03763421], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00622484  0.05716715  0.07529657], angle=0.094744
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870874  0.03312599  0.03282115], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99883919 -0.00792737  0.0301659   0.03670748], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01586089  0.06035516  0.07344337], angle=0.096376
+[TransformSmoother] q_smooth: [ 0.99873691 -0.01870872  0.03312599  0.03282115], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99894999 -0.0073553   0.02790566  0.03558229], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01471575  0.05583085  0.0711895 ], angle=0.091660
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870869  0.03312598  0.03282116], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99879122 -0.00535     0.03190731  0.03700538], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01070432  0.06384034  0.0740406 ], angle=0.098347
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870867  0.03312598  0.03282117], norm: 1.000000
+93it [00:03, 32.86it/s][TransformSmoother] q_raw: [ 0.99871073 -0.00416262  0.03117688  0.03984411], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00832882  0.06238057  0.07972249], angle=0.101570
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870864  0.03312597  0.03282118], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99905886 -0.00767289  0.02526252  0.03441401], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01535059  0.0505409   0.06884963], angle=0.086777
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870862  0.03312596  0.03282118], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99888709 -0.00517074  0.03000701  0.03601979], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01034531  0.06003629  0.07206631], angle=0.094366
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870859  0.03312595  0.03282119], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99888921 -0.00705548  0.02795345  0.03727156], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01411619  0.05592762  0.07457074], angle=0.094276
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870857  0.03312594  0.0328212 ], norm: 1.000000
+97it [00:03, 32.66it/s][TransformSmoother] q_raw: [ 0.99900413 -0.00489193  0.0297373   0.03290165], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00978711  0.05949435  0.06582515], angle=0.089265
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870854  0.03312593  0.0328212 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.9988263  -0.00731112  0.02863181  0.03837684], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01462797  0.05728603  0.07678373], angle=0.096909
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870852  0.03312592  0.03282121], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99902724 -0.01013571  0.02902237  0.03161567], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02027799  0.05806356  0.06325185], angle=0.088223
+[TransformSmoother] q_smooth: [ 0.99873692 -0.0187085   0.03312592  0.03282121], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99892609 -0.00920678  0.02782403  0.03588478], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01842015  0.05566799  0.07179526], angle=0.092697
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870848  0.03312591  0.03282121], norm: 1.000000
+101it [00:03, 32.40it/s][TransformSmoother] q_raw: [ 0.99888928 -0.005604    0.02827563  0.03727309], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01121215  0.05657221  0.07457379], angle=0.094273
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870846  0.0331259   0.03282122], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99885882 -0.01015547  0.02927747  0.03634219], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02031867  0.05857722  0.07271205], angle=0.095557
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870844  0.03312589  0.03282123], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.9988258  -0.00908213  0.0311717   0.03595648], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01817138  0.06236781  0.07194113], angle=0.096930
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870842  0.03312589  0.03282123], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99880047 -0.01365379  0.02688731  0.03857805], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0273185   0.05379614  0.07718696], angle=0.097970
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870841  0.03312587  0.03282125], norm: 1.000000
+105it [00:03, 32.30it/s][TransformSmoother] q_raw: [ 0.99901284 -0.01065659  0.02887123  0.03203485], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02132019  0.05776147  0.06409079], angle=0.088874
+[TransformSmoother] q_smooth: [ 0.99873692 -0.0187084   0.03312586  0.03282124], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99888748 -0.00799223  0.02827867  0.0368816 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0159904   0.05657833  0.07379056], angle=0.094350
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870838  0.03312586  0.03282125], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99885675 -0.00534007  0.0285143   0.03799494], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01068421  0.05705034  0.07601885], angle=0.095644
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870835  0.03312585  0.03282126], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99882921 -0.01195097  0.03040358  0.0356793 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02391128  0.0608309   0.07138647], angle=0.096789
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870834  0.03312584  0.03282127], norm: 1.000000
+109it [00:03, 32.57it/s][TransformSmoother] q_raw: [ 0.99889569 -0.01258613  0.02753845  0.03592531], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02518153  0.05509719  0.07187707], angle=0.094001
+[TransformSmoother] q_smooth: [ 0.99873692 -0.01870833  0.03312583  0.03282127], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99901634 -0.00458362  0.02571046  0.03583741], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00917025  0.05143779  0.07169833], angle=0.088716
+[TransformSmoother] q_smooth: [ 0.99873692 -0.0187083   0.03312582  0.03282128], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99917831 -0.00941088  0.02490169  0.030562  ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01882692  0.04981703  0.06114076], angle=0.081083
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870828  0.0331258   0.03282127], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99894235 -0.00670687  0.02589495  0.03739843], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01341848  0.05180817  0.07482324], angle=0.091993
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870826  0.03312579  0.03282128], norm: 1.000000
+113it [00:03, 32.72it/s][TransformSmoother] q_raw: [ 0.99906458 -0.00902909  0.02835329  0.03137732], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01806382  0.05672427  0.06277421], angle=0.086513
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870824  0.03312578  0.03282128], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99893169 -0.01255109  0.02416458  0.03733653], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02511113  0.04834638  0.07469967], angle=0.092455
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870823  0.03312576  0.03282129], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99904174 -0.00548778  0.02693821  0.03405623], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01097908  0.05389363  0.06813422], angle=0.087563
+[TransformSmoother] q_smooth: [ 0.99873693 -0.0187082   0.03312575  0.03282129], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99893095 -0.00981979  0.02507453  0.03757387], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01964659  0.05016694  0.07517452], angle=0.092487
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870819  0.03312574  0.0328213 ], norm: 1.000000
+117it [00:03, 32.99it/s][TransformSmoother] q_raw: [ 0.99896789 -0.01169025  0.02856085  0.03332812], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02338855  0.05714135  0.06667918], angle=0.090875
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870817  0.03312573  0.0328213 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99890417 -0.01131591  0.02863908  0.03524508], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0226401   0.05729909  0.07051592], angle=0.093639
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870816  0.03312572  0.03282131], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99896481 -0.01427886  0.02324203  0.0364036 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02856757  0.04650011  0.07283232], angle=0.091011
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870815  0.0331257   0.03282131], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99898057 -0.0129007   0.02571171  0.03478933], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02581016  0.05144089  0.06960232], angle=0.090315
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870814  0.03312569  0.03282132], norm: 1.000000
+121it [00:04, 33.37it/s][TransformSmoother] q_raw: [ 0.99893349 -0.01016349  0.03169386  0.03200124], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0203342   0.06341026  0.06402525], angle=0.092377
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870813  0.03312568  0.03282131], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99887502 -0.00956466  0.02867103  0.03654013], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0191365   0.05736358  0.07310768], angle=0.094876
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870811  0.03312568  0.03282132], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99878571 -0.01549451  0.02944566  0.0363314 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.03100157  0.05891516  0.07269222], angle=0.098571
+[TransformSmoother] q_smooth: [ 0.99873693 -0.0187081   0.03312567  0.03282133], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99905697 -0.00821339  0.02765605  0.03244757], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01643194  0.05532949  0.06491555], angle=0.086864
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870808  0.03312566  0.03282133], norm: 1.000000
+125it [00:04, 33.61it/s][TransformSmoother] q_raw: [ 0.99894225 -0.01030434  0.02682927  0.03589426], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02061595  0.05367747  0.07181384], angle=0.091997
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870807  0.03312565  0.03282133], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99900295 -0.01086847  0.02698249  0.03386634], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02174416  0.05398292  0.06775521], angle=0.089318
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870806  0.03312564  0.03282133], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99892144 -0.01254211  0.02921304  0.03384165], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02509324  0.05844709  0.06770764], angle=0.092898
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870804  0.03312563  0.03282134], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99900802 -0.00403544  0.02605759  0.0358844 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00807354  0.05213242  0.07179255], angle=0.089091
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870801  0.03312561  0.03282134], norm: 1.000000
+129it [00:04, 33.42it/s][TransformSmoother] q_raw: [ 0.99893936 -0.00729059  0.02915616  0.0348844 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01458633  0.05833294  0.06979347], angle=0.092123
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870799  0.03312561  0.03282135], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99882626 -0.00849699  0.02999748  0.03706831], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01700063  0.06001845  0.07416564], angle=0.096911
+[TransformSmoother] q_smooth: [ 0.99873693 -0.01870797  0.0331256   0.03282135], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99896188 -0.01111008  0.02888545  0.03342705], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02222784  0.0577909   0.06687724], angle=0.091140
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870796  0.03312559  0.03282136], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99889039 -0.00908183  0.03006699  0.03509253], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01817038  0.06015623  0.07021103], angle=0.094226
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870794  0.03312559  0.03282136], norm: 1.000000
+133it [00:04, 33.07it/s][TransformSmoother] q_raw: [ 0.99878209 -0.00730037  0.03297009  0.03597243], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01460667  0.06596697  0.07197409], angle=0.098718
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870792  0.03312559  0.03282137], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99913002 -0.00701235  0.02661932  0.03132802], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01402877  0.05325408  0.06267422], angle=0.083432
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870789  0.03312557  0.03282136], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99891896 -0.00992539  0.02650197  0.03687865], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01985793  0.05302305  0.07378389], angle=0.093005
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870788  0.03312556  0.03282137], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99894817 -0.0067943   0.0314196   0.03269866], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01359336  0.06286123  0.06542027], angle=0.091739
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870786  0.03312556  0.03282137], norm: 1.000000
+137it [00:04, 33.35it/s][TransformSmoother] q_raw: [ 0.99887738 -0.00320085  0.03024647  0.03631652], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00640409  0.06051559  0.07266023], angle=0.094777
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870783  0.03312555  0.03282138], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99889755 -0.00556891  0.02972197  0.03590654], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01114191  0.05946579  0.07183948], angle=0.093921
+[TransformSmoother] q_smooth: [ 0.99873694 -0.0187078   0.03312555  0.03282138], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99911911 -0.00639619  0.02695829  0.03151739], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01279614  0.05393243  0.0630533 ], angle=0.083953
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870778  0.03312554  0.03282138], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99890949 -0.00387767  0.02970245  0.03581291], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00775817  0.0594265   0.07165188], angle=0.093411
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870775  0.03312553  0.03282139], norm: 1.000000
+141it [00:04, 33.39it/s][TransformSmoother] q_raw: [ 9.98958626e-01 -7.39526919e-04  2.70437038e-02  3.67389992e-02], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00147957  0.05410619  0.07350352], angle=0.091282
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870772  0.03312552  0.03282139], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99899496 -0.00645375  0.02996527  0.03270319], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01291182  0.05995062  0.0654283 ], angle=0.089675
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870769  0.03312551  0.03282139], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99887144 -0.00405881  0.02998195  0.03661223], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00812068  0.05998647  0.07325202], angle=0.095027
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870767  0.03312551  0.0328214 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99897149 -0.00497661  0.02931106  0.03423545], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00995663  0.05864224  0.06849438], angle=0.090717
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870764  0.0331255   0.0328214 ], norm: 1.000000
+145it [00:04, 32.98it/s][TransformSmoother] q_raw: [ 0.99898167 -0.00766282  0.02814531  0.03442005], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01533085  0.05630973  0.06886347], angle=0.090266
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870762  0.03312549  0.03282141], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99882566 -0.00880452  0.02894452  0.03784172], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01761593  0.0579117   0.07571308], angle=0.096936
+[TransformSmoother] q_smooth: [ 0.99873694 -0.0187076   0.03312548  0.03282142], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99887285 -0.01167368  0.03032323  0.03460135], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02335613  0.06066925  0.06922871], angle=0.094968
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870759  0.03312548  0.03282142], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99896095 -0.00787865  0.02815722  0.03495877], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01576276  0.05633395  0.06994177], angle=0.091180
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870757  0.03312547  0.03282142], norm: 1.000000
+149it [00:04, 33.33it/s][TransformSmoother] q_raw: [ 0.99870923 -0.00500971  0.0295125   0.04103409], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01002374  0.0590504   0.08210351], angle=0.101629
+[TransformSmoother] q_smooth: [ 0.99873694 -0.01870754  0.03312546  0.03282144], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99887773 -0.01041968  0.02824893  0.03656111], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02084717  0.056519    0.07314959], angle=0.094762
+[TransformSmoother] q_smooth: [ 0.99873695 -0.01870752  0.03312545  0.03282145], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99885276 -0.00825665  0.02533656  0.03978768], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01651962  0.05069251  0.07960581], angle=0.095811
+[TransformSmoother] q_smooth: [ 0.99873695 -0.01870751  0.03312544  0.03282146], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99875646 -0.01275401  0.03096459  0.03693331], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02551859  0.06195487  0.07389725], angle=0.099752
+[TransformSmoother] q_smooth: [ 0.99873695 -0.01870749  0.03312543  0.03282147], norm: 1.000000
+153it [00:05, 33.37it/s][TransformSmoother] q_raw: [ 0.99892484 -0.01051254  0.02819943  0.03526236], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.02103261  0.05641908  0.07055   ], angle=0.092751
+[TransformSmoother] q_smooth: [ 0.99873695 -0.01870748  0.03312542  0.03282147], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99879651 -0.00724123  0.03000967  0.03811191], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01448828  0.06004344  0.07625441], angle=0.098132
+[TransformSmoother] q_smooth: [ 0.99873695 -0.01870746  0.03312542  0.03282148], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.9988825  -0.00673453  0.02964322  0.03618953], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01347408  0.05930853  0.07240604], angle=0.094560
+[TransformSmoother] q_smooth: [ 0.99873695 -0.01870744  0.03312541  0.03282149], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99886363 -0.00464688  0.02984528  0.03686607], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.00929728  0.05971318  0.07376008], angle=0.095355
+[TransformSmoother] q_smooth: [ 0.99873695 -0.01870741  0.03312541  0.03282149], norm: 1.000000
+157it [00:05, 33.58it/s][TransformSmoother] q_raw: [ 0.99904806 -0.00615185  0.02686832  0.0338116 ], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.0123076   0.05375369  0.06764468], angle=0.087274
+[TransformSmoother] q_smooth: [ 0.99873695 -0.01870739  0.03312539  0.0328215 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99894982 -0.00595171  0.02941084  0.03462426], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01190759  0.05884228  0.06927276], angle=0.091667
+[TransformSmoother] q_smooth: [ 0.99873695 -0.01870736  0.03312539  0.0328215 ], norm: 1.000000
+[TransformSmoother] q_raw: [ 0.99893729 -0.00645468  0.0284298   0.03569831], norm: 1.000000
+[TransformSmoother] rotvec_raw: [-0.01291394  0.05687974  0.07142192], angle=0.092213
+[TransformSmoother] q_smooth: [ 0.99873695 -0.01870734  0.03312538  0.0328215 ], norm: 1.000000
+159it [00:05, 30.44it/s]

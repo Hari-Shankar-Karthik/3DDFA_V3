@@ -23,7 +23,9 @@ do
     # 1. Run v2_landmarks.py with smoothing
     python3 v2_landmarks.py \
         --video_input "300VW_Dataset_2015_12_14/$ID/vid.avi" \
-        --o_landmarks "preds/$ID/v2.npy"
+        --o_landmarks "preds/$ID/v2.npy" \
+        -n_pre 2 \
+        -n_next 0
 
     echo "--- Finished ID: $ID ---"
     echo ""

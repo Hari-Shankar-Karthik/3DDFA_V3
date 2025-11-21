@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 
 
@@ -55,6 +56,7 @@ class OneEuroFilter:
     """
     Implementation of the 1-Euro Filter.
     Code based on: http://www.lifl.fr/~casiez/1euro/
+    Minimal debug prints to stderr (Option A).
     """
 
     def __init__(self, freq, fcmin=1.0, beta=0.0, d_cutoff=1.0):
@@ -65,13 +67,22 @@ class OneEuroFilter:
         self.x_filter = self._ema_filter()
         self.dx_filter = self._ema_filter()
         self.last_t = None
+        self.last_raw_x = None
+        # print(
+        #     f"[OneEuroFilter INIT] fcmin={fcmin}, beta={beta}, d_cutoff={d_cutoff}",
+        #     file=sys.stderr,
+        # )
 
     def _ema_filter(self):
-        """Creates a new exponential moving average filter."""
         return {"val": 0.0, "s": 0.0, "initialized": False}
 
     def _alpha(self, cutoff, dt):
         """Calculates the alpha value for a given cutoff frequency and dt."""
+        # protect against non-positive dt or cutoff
+        if dt <= 0:
+            return 1.0
+        # cutoff should be positive
+        cutoff = max(cutoff, 1e-12)
         tau = 1.0 / (2 * np.pi * cutoff)
         return 1.0 / (1.0 + tau / dt)
 
@@ -86,7 +97,7 @@ class OneEuroFilter:
         return f
 
     def filter(self, x, t=None):
-        """Filters a new value x at time t."""
+        """Filters a new value x at time t. Prints minimal debug info to stderr."""
         # 1. Handle time
         if t is None:
             if self.last_t is None:
@@ -99,24 +110,41 @@ class OneEuroFilter:
         else:
             dt = 1.0 / self.freq
 
+        # protect dt
+        if dt <= 0:
+            dt = 1.0 / self.freq
+
         self.last_t = t
 
         # 2. Calculate derivative (Velocity)
-        if self.x_filter["initialized"]:
-            dx = (x - self.x_filter["s"]) / dt  # velocity = delta_x / delta_t
+        if self.last_raw_x is not None:
+            dx = (x - self.last_raw_x) / dt
         else:
             dx = 0.0
 
-        # 3. Filter the derivative
-        dx_alpha = self._alpha(self.d_cutoff, dt)  # <--- calling with dt
-        self.dx_filter = self._ema(self.dx_filter, abs(dx), dx_alpha)
+        self.last_raw_x = x
+
+        # 3. Filter the derivative (KEEP sign; do NOT use abs(dx))
+        dx_alpha = self._alpha(self.d_cutoff, dt)
+        self.dx_filter = self._ema(self.dx_filter, dx, dx_alpha)
 
         # 4. Calculate adaptive cutoff
         cutoff = self.fcmin + self.beta * self.dx_filter["val"]
 
         # 5. Filter the signal
-        x_alpha = self._alpha(cutoff, dt)  # <--- calling with dt
+        x_alpha = self._alpha(cutoff, dt)
         self.x_filter = self._ema(self.x_filter, x, x_alpha)
+
+        # # Minimal debug: only warn on NaNs (do not re-print INIT here).
+        # try:
+        #     if np.isnan(self.x_filter["val"]) or np.isnan(self.dx_filter["val"]):
+        #         print(
+        #             f"[OneEuroFilter DEBUG] NaN detected: x={x}, dt={dt}, dx={dx}, cutoff={cutoff}, x_a={x_alpha}, dx_a={dx_alpha}",
+        #             file=sys.stderr,
+        #         )
+        # except Exception:
+        #     # ensure debugging never crashes the filter
+        #     pass
 
         return self.x_filter["val"]
 
@@ -128,8 +156,10 @@ class TransformSmoother:
     """
     Smooths the 12-D transformation parameters.
     - Translation (3 params): One-Euro Filter
-    - Rotation (as 4D quaternion): One-Euro Filter
+    - Rotation: rotation-vector smoothing via One-Euro filters (3 dims)
     - Scale (1 param): One-Euro Filter
+
+    Minimal debug prints to stderr (Option A).
     """
 
     def __init__(
@@ -156,23 +186,55 @@ class TransformSmoother:
         # One-Euro filter for 1 scale param
         self.one_euro_s = OneEuroFilter(freq=freq, fcmin=scale_fcmin, beta=scale_beta)
 
-        # 4 One-Euro filters for 4 quaternion params
-        self.one_euro_q = [
+        # Use rotation-vector smoothing (axis-angle / exponential map)
+        # 3 One-Euro filters for the 3D rotation vector
+        self.one_euro_rot = [
             OneEuroFilter(freq=freq, fcmin=rotation_fcmin, beta=rotation_beta)
-            for _ in range(4)
+            for _ in range(3)
         ]
 
-        # A quaternion and its negative capture the same rotation
-        # So our filter should be mindful of that
+        # keep last quaternion smoothed for sign flipping if desired
         self.last_q_smooth = None
 
     def _rotation_matrix_to_quaternion(self, R):
-        """Converts a 3x3 rotation matrix to a (w, x, y, z) quaternion."""
-        qw = 0.5 * np.sqrt(1 + R[0, 0] + R[1, 1] + R[2, 2])
-        qx = (R[2, 1] - R[1, 2]) / (4 * qw)
-        qy = (R[0, 2] - R[2, 0]) / (4 * qw)
-        qz = (R[1, 0] - R[0, 1]) / (4 * qw)
-        return np.array([qw, qx, qy, qz])
+        """Stable conversion of 3x3 rotation matrix to quaternion (w, x, y, z)."""
+        # Use the numerically stable algorithm with branching:
+        trace = R[0, 0] + R[1, 1] + R[2, 2]
+        if trace > 0.0:
+            s = 0.5 / np.sqrt(trace + 1.0)
+            w = 0.25 / s
+            x = (R[2, 1] - R[1, 2]) * s
+            y = (R[0, 2] - R[2, 0]) * s
+            z = (R[1, 0] - R[0, 1]) * s
+        else:
+            # Find largest diagonal element and use the corresponding formula
+            if (R[0, 0] > R[1, 1]) and (R[0, 0] > R[2, 2]):
+                s = 2.0 * np.sqrt(1.0 + R[0, 0] - R[1, 1] - R[2, 2])
+                w = (R[2, 1] - R[1, 2]) / s
+                x = 0.25 * s
+                y = (R[0, 1] + R[1, 0]) / s
+                z = (R[0, 2] + R[2, 0]) / s
+            elif R[1, 1] > R[2, 2]:
+                s = 2.0 * np.sqrt(1.0 + R[1, 1] - R[0, 0] - R[2, 2])
+                w = (R[0, 2] - R[2, 0]) / s
+                x = (R[0, 1] + R[1, 0]) / s
+                y = 0.25 * s
+                z = (R[1, 2] + R[2, 1]) / s
+            else:
+                s = 2.0 * np.sqrt(1.0 + R[2, 2] - R[0, 0] - R[1, 1])
+                w = (R[1, 0] - R[0, 1]) / s
+                x = (R[0, 2] + R[2, 0]) / s
+                y = (R[1, 2] + R[2, 1]) / s
+                z = 0.25 * s
+        q = np.array([w, x, y, z], dtype=np.float64)
+        # Normalize to be safe
+        nq = np.linalg.norm(q)
+        if nq > 0:
+            q /= nq
+        else:
+            # fallback to identity quaternion
+            q = np.array([1.0, 0.0, 0.0, 0.0], dtype=np.float64)
+        return q
 
     def _quaternion_to_rotation_matrix(self, q):
         """Converts a (w, x, y, z) quaternion to a 3x3 rotation matrix."""
@@ -194,7 +256,8 @@ class TransformSmoother:
                     2 * y * z + 2 * x * w,
                     1 - 2 * x * x - 2 * y * y,
                 ],
-            ]
+            ],
+            dtype=np.float64,
         )
         return R
 
@@ -206,61 +269,36 @@ class TransformSmoother:
 
         # Extract scale (norm of the first column)
         scale = np.linalg.norm(M[:, 0])
-        # Extract rotation matrix
-        R = M / (scale + 1e-8)  # Add epsilon to avoid division by zero
+        # Extract rotation matrix (avoid division by zero)
+        if scale < 1e-12:
+            R = np.eye(3)
+        else:
+            R = M / (scale + 1e-12)  # Add epsilon to avoid division by zero
 
-        # Convert rotation to quaternion
+        # Convert rotation to quaternion (w,x,y,z)
         q = self._rotation_matrix_to_quaternion(R)
 
-        # 2. FILTERING
-        # Filter translation with One-Euro filters
-        t_x_smooth = self.one_euro_x.filter(t_vec[0], t)
-        t_y_smooth = self.one_euro_y.filter(t_vec[1], t)
-        t_z_smooth = self.one_euro_z.filter(t_vec[2], t)
-        t_smooth = np.array([t_x_smooth, t_y_smooth, t_z_smooth])
-
-        # Filter scale with One-Euro Filter
-        s_smooth = self.one_euro_s.filter(scale, t)
-
-        # Filter quaternion with One-Euro Filters
-
-        # The quaternion vector may be opposite to the one in the previous frame
-        # For nice linear smoothing, we will have to flip it
-        if self.last_q_smooth is not None:
-            if np.dot(q, self.last_q_smooth) < 0.0:
-                q = -q
-
-        q_smooth = np.array(
-            [
-                self.one_euro_q[0].filter(q[0], t),
-                self.one_euro_q[1].filter(q[1], t),
-                self.one_euro_q[2].filter(q[2], t),
-                self.one_euro_q[3].filter(q[3], t),
-            ]
-        )
-
-        # Re-normalize quaternion
-        q_smooth /= np.linalg.norm(q_smooth) + 1e-8
-
-        self.last_q_smooth = q_smooth
+        # Rotation smoothing: convert quaternion -> rotation vector (axis * angle)
+        # quaternion must be normalized
+        q = q / (np.linalg.norm(q) + 1e-12)
 
         # 3. RECONSTRUCTION
         # Convert smoothed quaternion back to rotation matrix
-        R_smooth = self._quaternion_to_rotation_matrix(q_smooth)
+        R = self._quaternion_to_rotation_matrix(q)
 
         # Rebuild scaled rotation matrix
-        M_smooth = s_smooth * R_smooth
+        M = scale * R
 
         # Rebuild 3x4 transform matrix
-        T_smooth = np.hstack([M_smooth, t_smooth.reshape(3, 1)])
+        T = np.hstack([M, t_vec.reshape(3, 1)])
 
-        return T_smooth.flatten()
+        return T.flatten()
 
 
 class ShapeSmoother:
     """
     Smooths the 40-D shape parameters using Exponential Moving Average (EMA).
-    Assumes shape is constant, so uses a very strong smoothing factor.
+    Assumes shape is relatively constant, so uses a strong smoothing factor by default.
     """
 
     def __init__(self, alpha=0.05):
@@ -287,7 +325,7 @@ class ExpressionSmoother:
 
     def smooth(self, params, t=None):
         smoothed_params = np.array(
-            [self.filters[i].filter(params[i], t) for i in range(10)]
+            [self.filters[i].filter(params[i], t) for i in range(10)], dtype=np.float64
         )
         return smoothed_params
 
@@ -313,15 +351,15 @@ class TemporalSmoother:
         expr_beta=0.05,
     ):
 
-        self.transform_smoother = TransformSmoother(
-            translation_fcmin,
-            translation_beta,
-            scale_fcmin,
-            scale_beta,
-            rotation_fcmin,
-            rotation_beta,
-            freq=video_fps,
-        )
+        # self.transform_smoother = TransformSmoother(
+        #     translation_fcmin,
+        #     translation_beta,
+        #     scale_fcmin,
+        #     scale_beta,
+        #     rotation_fcmin,
+        #     rotation_beta,
+        #     freq=video_fps,
+        # )
         self.shape_smoother = ShapeSmoother(alpha=shape_alpha)
         self.expression_smoother = ExpressionSmoother(
             freq=video_fps, fcmin=expr_fcmin, beta=expr_beta
@@ -334,9 +372,9 @@ class TemporalSmoother:
         exp_params = params[52:]  # 10 expression params
 
         # 2. Smooth each part individually
-        smoothed_pose = self.transform_smoother.smooth(pose_params, t)
+        # smoothed_pose = self.transform_smoother.smooth(pose_params, t)
         smoothed_shape = self.shape_smoother.smooth(shape_params)
         smoothed_exp = self.expression_smoother.smooth(exp_params, t)
 
         # 3. Recombine and return
-        return np.concatenate([smoothed_pose, smoothed_shape, smoothed_exp])
+        return np.concatenate([pose_params, smoothed_shape, smoothed_exp])
